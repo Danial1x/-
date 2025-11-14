@@ -44,9 +44,11 @@
             gap: 2rem;
             padding: 1rem;
             flex-wrap: wrap;
-            position: fixed;
+            /* ลบ position: fixed ออกจาก entry-screen เพื่อไม่ให้มันบล็อก Terminal */
+            position: absolute; 
             inset: 0;
             z-index: 50;
+            transition: opacity 0.5s ease-out; /* เพิ่ม transition */
         }
         
         /* Pixel Heart (Uiverse.io by anandita-3217) */
@@ -936,7 +938,6 @@
 
                 if (bgMusic.readyState > 0) {
                     document.getElementById('total-time').innerText = formatTime(bgMusic.duration);
-                    // playStatusCheckbox.checked = !bgMusic.paused; // Commented out to prevent initial check failure
                     updatePlayPauseIcons(!bgMusic.paused);
                 }
                 
@@ -1013,13 +1014,15 @@
             heartButton.onclick = () => { 
                 
                 // 1.1 เปลี่ยนหน้าทันที (UI First)
-                entryScreen.style.transition = 'opacity 0.5s ease-out';
+                // สั่งให้ Terminal โผล่มาและ Opacity เป็น 1 ก่อน
+                terminalScreen.classList.remove('hidden');
+                terminalScreen.style.opacity = '1';
+                
                 entryScreen.style.opacity = '0';
                 setTimeout(() => {
                     entryScreen.style.display = 'none';
                 }, 500);
                 
-                terminalScreen.classList.remove('hidden');
                 
                 // รีเซ็ต Style Terminal (เผื่อค้างจากหน้า Final)
                 terminal.style.display = ''; 
