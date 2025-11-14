@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You 💖</title>
     
-    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Fonts (Kanit for Thai, Fira Code for code) -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- 3. Confetti (พลุ) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- 4. Tone.js (เสียง) - ใช้ unpkg เผื่อ cdnjs โดนบล็อก -->
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
 
     <style>
@@ -39,14 +35,12 @@
         #entry-screen {
             background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
             cursor: pointer;
-            /* FIX: Ensure flex items are centered and visible */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem; /* 32px */
+            gap: 2rem;
             padding: 1rem;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            /* FIX: Ensure it fills the screen */
+            flex-wrap: wrap;
             position: fixed;
             inset: 0;
             z-index: 50;
@@ -61,7 +55,6 @@
             padding: 20px;
             animation: heartbeat 2s infinite ease-in-out;
             cursor: pointer;
-            /* FIX: Ensure it's not pushed out */
             flex-shrink: 0; 
         }
         .pixel {
@@ -123,11 +116,11 @@
         }
         .loading svg polyline#back {
             fill: none;
-            stroke: #ff99aa; /* สีพื้นหลังเส้น (อ่อนกว่า) */
+            stroke: #ff99aa; 
         }
         .loading svg polyline#front {
             fill: none;
-            stroke: #e63946; /* สีเส้นที่วิ่ง */
+            stroke: #e63946;
             stroke-dasharray: 48, 144;
             stroke-dashoffset: 192;
             animation: dash_682 1.4s linear infinite;
@@ -137,8 +130,7 @@
             to { stroke-dashoffset: 0; }
         }
         
-        /* --- New: Cat Loader CSS (Uiverse.io by vinodjangid07) --- */
-        /* ปรับ CSS ให้เข้ากับธีมชมพู */
+        /* Cat Loader CSS */
         .cat-loader-wrapper {
             width: fit-content;
             height: fit-content;
@@ -146,7 +138,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: absolute; /* จัดตำแหน่งแมว */
+            position: absolute;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
@@ -164,7 +156,7 @@
             width: 80px;
         }
         .catbody path {
-            fill: #ff6b81 !important; /* เปลี่ยนตัวแมวเป็นสีชมพู */
+            fill: #ff6b81 !important;
         }
         .tail {
             position: absolute;
@@ -174,7 +166,7 @@
             transform-origin: top;
         }
         .tail path {
-            fill: #e63946 !important; /* เปลี่ยนหางเป็นสีชมพูเข้ม */
+            fill: #e63946 !important;
         }
         @keyframes tail {
             0% { transform: rotateZ(60deg); }
@@ -189,7 +181,7 @@
             margin: 0px 0px 100px 120px;
         }
         .zzz, .bigzzz {
-            color: #e63946; /* เปลี่ยนเป็นสีชมพูเข้ม */
+            color: #e63946;
             font-weight: 700;
             font-size: 15px;
             animation: zzz 2s linear infinite;
@@ -201,19 +193,16 @@
         }
         @keyframes zzz {
             0% { color: transparent; }
-            50% { color: #e63946; } /* สีชมพูเข้ม */
+            50% { color: #e63946; }
             100% { color: transparent; }
         }
-        /* End Cat Loader CSS */
-
 
         /* --- 2. CSS หน้า Terminal --- */
         #terminal-screen {
-            background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
-            color: #333333; /* ตัวอักษรสีเข้ม */
+            background-color: #fce4ec;
+            color: #333333;
         }
         
-        /* Cursor กระพริบ */
         .cursor-blink {
             animation: blink 1s step-end infinite;
         }
@@ -221,22 +210,22 @@
             50% { opacity: 0; }
         }
 
-        /* ปุ่ม Run (เปลี่ยนจากเหลืองเป็นชมพู) */
+        /* ปุ่ม Run */
         .run-button {
             font-family: 'Fira Code', monospace;
-            background-color: #ffc0cb; /* Pink Pastel Light */
+            background-color: #ffc0cb;
             color: #1a1a1a;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(255, 175, 200, 0.5); /* Pink shadow */
+            box-shadow: 0 4px 10px rgba(255, 175, 200, 0.5);
         }
         .run-button:hover {
-            background-color: #ffafc2; /* Pink Hover */
+            background-color: #ffafc2;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 175, 200, 0.7); /* Pink shadow */
+            box-shadow: 0 6px 15px rgba(255, 175, 200, 0.7);
         }
         .run-button:disabled {
             background-color: #ccc;
@@ -259,9 +248,7 @@
             box-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
         }
 
-        /* --- 3. CSS Loading Animations (Uiverse.io) --- */
-        
-        /* Loader 1: Text Loading (by c0d3hdz) */
+        /* --- 3. CSS Loading Animations --- */
         .loader-text {
             font-family: "Kanit", sans-serif;
             background-image: linear-gradient(90deg, #ff0037 0%, #ff2c7d 10%);
@@ -301,42 +288,6 @@
             100% { transform: translateY(-150px) translateX(60px); opacity: 0; }
         }
 
-        /* Loader 2: Beating Heart (by FWDJc) */
-        .loader-heart {
-            width: 7em;
-            height: 5em;
-            position: relative;
-            animation: beat 1s infinite;
-        }
-        .loader-heart::before, .loader-heart::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            width: 50px;
-            height: 80px;
-            border-radius: 5em 5em 0 0;
-            animation: coldblue 1s infinite;
-        }
-        .loader-heart::before {
-            left: 50px;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-        .loader-heart::after {
-            left: 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-        @keyframes beat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        @keyframes coldblue {
-            0%, 100% { background-color: rgb(255, 255, 255); }
-            50% { background-color: rgb(198, 23, 23); }
-        }
-        
         /* --- 4. CSS สำหรับ Gallery --- */
         .gallery-container {
             display: flex;
@@ -349,9 +300,9 @@
             position: relative;
             width: 90%;
             min-height: 300px; 
-            background-color: #fff; /* เปลี่ยนเป็นสีขาว/อ่อน */
+            background-color: #fff;
             border-radius: 8px;
-            border: 2px solid #e63946; /* เปลี่ยนเป็นสีแดง/ชมพูเข้ม */
+            border: 2px solid #e63946;
             overflow: hidden; 
         }
         .gallery-image {
@@ -369,17 +320,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.9); /* พื้นหลัง Loading สีอ่อน */
-            color: #e63946; /* ตัวอักษรสีเข้ม */
+            background: rgba(255,255,255,0.9);
+            color: #e63946;
             font-family: 'Kanit', sans-serif;
             font-size: 1.2rem;
             z-index: 10;
-            /* เพิ่มเพื่อให้ Fancy Loader จัดองค์ประกอบได้ */
             flex-direction: column; 
             gap: 15px;
         }
 
-        /* --- 4.1 Fancy Carousel Loader (by StealthWorm) --- */
+        /* --- Fancy Carousel Loader --- */
         .loader-fancy {
             display: flex;
             position: relative;
@@ -390,7 +340,6 @@
             width: 200px;
             overflow: hidden;
         }
-
         .loader-fancy .container {
             width: 100%;
             display: flex;
@@ -399,7 +348,6 @@
             position: relative;
             align-items: center;
         }
-
         .carousel {
             display: flex;
             gap: 1rem;
@@ -409,30 +357,26 @@
             transform-origin: center;
             animation-delay: 2s;
         }
-
         .loader-fancy .container:nth-child(3) {
             justify-content: flex-start;
             justify-items: flex-start;
             animation: scroll-up 4s infinite ease-in-out;
             animation-delay: 3s;
         }
-
         .loader-fancy .container:nth-child(2) {
             justify-content: flex-end;
             justify-items: flex-end;
             animation: scroll-down 4s infinite ease-in-out;
             animation-delay: 3s;
         }
-
         .loader-fancy .container:nth-child(1) {
             justify-content: flex-end;
             justify-items: flex-end;
             animation: scroll-down 3s infinite ease-in-out;
             animation-delay: 3s;
         }
-
         .love {
-            background: #ff2c7d; /* Pink */
+            background: #ff2c7d;
             display: flex;
             width: 30px;
             height: 30px;
@@ -444,19 +388,16 @@
             transform: rotate(45deg);
             animation-delay: 2s;
         }
-
         .love::before, .love::after {
             content: '';
             position: absolute;
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: #ff2c7d; /* Pink */
+            background: #ff2c7d;
         }
-
         .love::before { left: -16px; }
         .love::after { top: -16px; }
-
         .death {
             display: flex;
             width: 100%;
@@ -467,36 +408,32 @@
             animation: rotation 3s infinite ease-in-out;
             animation-delay: 1s;
         }
-
         .death:after {
             content: '';
             height: 63px;
             position: absolute;
-            border-left: 12px solid #e63946; /* Red */
+            border-left: 12px solid #e63946;
             transform: rotate(45deg);
             border-radius: 8px;
             top: -4px;
         }
-
         .death:before {
             content: '';
             height: 60px;
             position: absolute;
-            border-left: 12px solid #e63946; /* Red */
+            border-left: 12px solid #e63946;
             transform: rotate(-45deg);
         }
-
         .robots {
             display: flex;
             width: 100%;
             height: 55px;
             justify-content: space-between;
-            background-color: #e63946; /* Red */
+            background-color: #e63946;
             border-radius: 0 8px 8px;
             padding: 8px;
             animation-delay: 5s;
         }
-
         .robots::after, .robots::before {
             content: '';
             width: 12px;
@@ -508,61 +445,26 @@
             animation-delay: 2s;
             animation: blink 0.5s 2 forwards;
         }
-        
         @keyframes scroll-up {
             0% { transform: translateY(0); filter: blur(0); }
             30% { transform: translateY(-150%); filter: blur(10px); }
             60% { transform: translateY(0); filter: blur(0px); }
         }
-
         @keyframes scroll-down {
             0% { transform: translateY(0); filter: blur(0); }
             30% { transform: translateY(150%); filter: blur(10px); }
             60% { transform: translateY(0); filter: blur(0px); }
         }
-
         @keyframes rotation {
             20%, 100% { transform: rotate(180deg); }
         }
-
         @keyframes blink {
             0% { height: 0; }
             20% { height: 12px; }
             100% { height: 12px; }
         }
-        
-        /* End Fancy Loader CSS */
-
-
-        .gallery-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-        }
-        .gallery-button {
-            background: #fff; /* เปลี่ยนเป็นสีขาว */
-            color: #e63946; /* ตัวอักษรสีเข้ม */
-            border: 1px solid #e63946;
-            border-radius: 5px;
-            padding: 5px 15px;
-            font-weight: 600;
-            font-family: 'Fira Code', monospace;
-        }
-        .gallery-button:disabled {
-            background: #f0f0f0;
-            color: #aaa;
-            border-color: #ccc;
-            cursor: not-allowed;
-        }
-        .gallery-counter {
-            color: #e63946;
-            font-size: 0.9rem;
-        }
 
         /* --- 5. Final Loading Animation --- */
-        
         .heartbeatloader-container {
             width: 100%;
             height: 100%;
@@ -570,11 +472,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #e63946; /* เปลี่ยนเป็นสีเข้ม */
+            color: #e63946;
             padding-top: 50px;
         }
-
-        /* Final Loading 2: Simple Heartbeat Loader (by vikramsinghnegi) */
         .simple-heart-loader {
             position: relative;
             width: 40px;
@@ -582,11 +482,10 @@
             margin: 50px auto 0;
             animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
         }
-
         .simple-heart-loader:before,
         .simple-heart-loader:after {
             content: "";
-            background: #e63946; /* Red/Pink */
+            background: #e63946;
             width: 40px;
             height: 60px;
             border-radius: 50px 50px 0 0;
@@ -594,7 +493,6 @@
             left: 0;
             bottom: 0;
             transform: rotate(45deg);
-            /* FIX: ทำให้หัวใจสมมาตร (ใช้ 50% 100%) */
             transform-origin: 50% 100%; 
             box-shadow: 5px 4px 5px rgba(0, 0, 0, 0.1) inset; 
         }
@@ -610,8 +508,7 @@
              100% { transform: scale(0.9); }
         }
 
-
-        /* --- 6. Final Card (Uiverse.io by Sashank02) --- */
+        /* --- 6. Final Card --- */
         .card-container {
             display: flex;
             align-items: center;
@@ -620,29 +517,25 @@
             height: 100%;
             padding: 20px;
         }
-
         .card {
             padding: 20px;
             width: 330px;
             min-height: 370px;
             border-radius: 20px;
-            background: #212121; /* Dark background (ใช้สีเดิมเพื่อตัดกับพื้นหลังชมพู) */
+            background: #212121;
             box-shadow: 5px 5px 8px #1b1b1b, -5px -5px 8px #272727; 
             transition: 0.4s;
         }
-
         .card:hover {
             translate: 0 -10px;
         }
-
         .card-title {
             font-size: 18px;
             font-weight: 600;
-            color: #ffc0cb; /* Light Pink */
-            margin: 15px 0 0 0; /* Align text better */
+            color: #ffc0cb;
+            margin: 15px 0 0 0;
             text-align: center;
         }
-
         .card-image {
             min-height: 170px;
             background-color: #313131;
@@ -650,122 +543,97 @@
             background: #313131;
             box-shadow: inset 5px 5px 3px #2f2f2f, inset -5px -5px 3px #333333;
         }
-
         .card-body {
             margin: 13px 0 0 0;
             color: rgb(184, 184, 184);
             font-size: 15px;
             text-align: center;
-            white-space: pre-wrap; /* สำหรับข้อความยาว */
+            white-space: pre-wrap;
         }
-
         .footer {
             margin: 28px 0 0 0;
             font-size: 13px;
             color: #b3b3b3;
             text-align: right;
         }
-
         .by-name {
             font-weight: 700;
-            color: #ffc0cb; /* Light Pink */
+            color: #ffc0cb;
         }
         
-        /* --- Music Player CSS (Uiverse.io by hoshikawamaki) - FIXED --- */
-        
-        /* FIX: ทำให้ Music Player อยู่ในสถานะ 'Expanded' ตลอดเวลา */
+        /* --- Music Player CSS --- */
         .player-card {
-            /* (h-20 w-40) -> (h-40 w-72) */
-            height: 10rem; /* h-40 */
-            width: 18rem; /* w-72 */
+            height: 10rem;
+            width: 18rem;
             transition: none;
+            background-color: #fff !important;
+            box-shadow: 5px 5px 8px #ff99aa !important;
         }
         .player-disc-area {
-            /* (h-0) -> (h-20) */
-            height: 5rem; /* h-20 */
+            height: 5rem;
         }
         .player-disc-small {
-            /* (opacity-0) -> (opacity-100) */
             opacity: 1;
             transition: none;
-            /* (-top-6 -left-4) */
             top: -1.5rem;
             left: -1rem;
         }
-        /* FIX: เพิ่ม Animation ให้แผ่นเล็กหมุน */
         .player-disc-small .disk-svg {
             animation: spin 3s linear infinite; 
         }
         .player-text-area {
-            /* (-ml-24) -> (-ml-3) */
             margin-left: -0.75rem;
             overflow: hidden;
             text-wrap: nowrap;
         }
         .player-range-bar {
-            /* (mt-3) -> (mt-0) */
             margin-top: 0;
+            background-color: #f1a1b4 !important;
         }
         .player-range-time {
-            /* (hidden) -> (inline-block) */
             display: inline-block;
         }
         .player-range-input {
-            /* (w-24) -> (w-full) */
             width: 100%;
         }
+        .player-range-input::-webkit-slider-thumb {
+            border-color: #e63946 !important;
+            background-color: #ffc0cb !important;
+        }
         .player-controls-hidden {
-             /* (w-0) -> (w-12) */
             width: 3rem;
         }
-
         .disk-svg {
-            border-color: #ff6b81 !important; /* Pink */
+            border-color: #ff6b81 !important;
         }
         .disk-svg path[fill="purple"], .disk-svg path[fill="mediumpurple"], .disk-svg path[fill="rebeccapurple"] {
-            fill: #e63946 !important; /* Red */
+            fill: #e63946 !important;
         }
         .disk-svg path[fill="mediumpurple"] {
-            fill: #ff2c7d !important; /* Darker Pink */
+            fill: #ff2c7d !important;
         }
         .disk-svg path[fill="rebeccapurple"] {
-            fill: #ff6b81 !important; /* Light Pink */
+            fill: #ff6b81 !important;
         }
         .disk-center {
-            background-color: #ffc0cb !important; /* Light Pink */
-            border-color: #e63946 !important; /* Red */
-        }
-
-        /* Card and Text colors */
-        .player-card {
-            background-color: #fff !important; /* White Card */
-            box-shadow: 5px 5px 8px #ff99aa !important; /* Pink Shadow */
+            background-color: #ffc0cb !important;
+            border-color: #e63946 !important;
         }
         .player-name {
-            color: #e63946 !important; /* Red Text */
+            color: #e63946 !important;
         }
         .player-artist {
-            color: #ff6b81 !important; /* Pink Text */
+            color: #ff6b81 !important;
         }
-        .player-range-bar {
-            background-color: #f1a1b4 !important; /* Muted Pink Range background */
-        }
-        .player-range-input::-webkit-slider-thumb {
-            border-color: #e63946 !important; /* Red thumb border */
-            background-color: #ffc0cb !important; /* Light Pink thumb color */
-        }
-
-        /* SVG Controls */
         .player-controls svg {
-            color: #e63946 !important; /* Red/Pink Controls */
-            stroke: #e63946 !Mimportant;
+            color: #e63946 !important;
+            stroke: #e63946 !important;
         }
         
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
-    <!-- Hidden Fancy Loader HTML for cloning in JS -->
     <div id="fancyLoaderTemplate" class="hidden">
         <div class="loader-fancy">
             <div class="container">
@@ -786,29 +654,12 @@
         </div>
     </div>
 
-    <!-- GLOBAL MUSIC PLAYER (ซ่อนไว้ก่อน) -->
     <div id="music-player-container" class="transition-opacity duration-1000 opacity-0 transform scale-90">
-        <!-- FIXED LAYOUT: No more group/he classes -->
         <div class="flex flex-col items-center select-none">
-            
-            <!-- (ลบแผ่นเสียงอันใหญ่ออก) -->
-            
-            <!-- ส่วนควบคุม (Card) -->
-            <div
-                class="z-30 flex flex-col transition-all duration-300 bg-white shadow-md rounded-2xl player-card"
-            >
-                <!-- ชื่อเพลง/ปกเพลง -->
+            <div class="z-30 flex flex-col transition-all duration-300 bg-white shadow-md rounded-2xl player-card">
                 <div class="flex flex-row w-full player-disc-area">
-                    <div
-                        class="relative flex items-center justify-center w-24 h-24 transition-all duration-100 player-disc-small"
-                    >
-                        <svg
-                            width="96"
-                            height="96"
-                            viewBox="0 0 128 128"
-                            class="duration-500 border-4 rounded-full shadow-md disk-svg border-zinc-400 border-spacing-5"
-                        >
-                            <!-- Disc Icon -->
+                    <div class="relative flex items-center justify-center w-24 h-24 transition-all duration-100 player-disc-small">
+                        <svg width="96" height="96" viewBox="0 0 128 128" class="duration-500 border-4 rounded-full shadow-md disk-svg border-zinc-400 border-spacing-5">
                              <rect width="128" height="128" fill="black"></rect>
                             <circle cx="20" cy="20" r="2" fill="white"></circle>
                             <circle cx="40" cy="30" r="2" fill="white"></circle>
@@ -816,9 +667,7 @@
                             <circle cx="80" cy="40" r="2" fill="white"></circle>
                             <circle cx="100" cy="20" r="2" fill="white"></circle>
                             <circle cx="120" cy="50" r="2" fill="white"></circle>
-                            <circle
-                                cx="90" cy="30" r="10" fill="white" fill-opacity="0.5"
-                            ></circle>
+                            <circle cx="90" cy="30" r="10" fill="white" fill-opacity="0.5"></circle>
                             <circle cx="90" cy="30" r="8" fill="white"></circle>
                             <path d="M0 128 Q32 64 64 128 T128 128" fill="purple" stroke="black" stroke-width="1"></path>
                             <path d="M0 128 Q32 48 64 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
@@ -826,47 +675,21 @@
                             <path d="M0 128 Q16 64 32 128 T64 128" fill="purple" stroke="black" stroke-width="1"></path>
                             <path d="M64 128 Q80 64 96 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
                         </svg>
-                        <div
-                            class="absolute z-10 w-6 h-6 rounded-full shadow-sm top-9 left-9 bg-white disk-center border-4 border-zinc-400"
-                        ></div>
+                        <div class="absolute z-10 w-6 h-6 rounded-full shadow-sm top-9 left-9 bg-white disk-center border-4 border-zinc-400"></div>
                     </div>
-                    <div
-                        class="flex flex-col justify-center w-full pl-3 player-text-area"
-                    >
+                    <div class="flex flex-col justify-center w-full pl-3 player-text-area">
                         <p class="text-xl font-bold player-name" id="current-song-name">My Love Song</p>
                         <p class="text-zinc-600 player-artist" id="current-artist">อิน & แฟน</p>
                     </div>
                 </div>
                 
-                <!-- Time Bar -->
-                <div
-                    class="flex flex-row mx-3 mt-3 bg-indigo-100 rounded-md min-h-4 player-range-bar"
-                >
-                    <span
-                        class="pl-3 text-sm text-zinc-600 player-range-time"
-                        id="current-time"
-                        >0:00</span
-                    >
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="0"
-                        id="playback-range"
-                        class="flex-grow h-1 mx-2 my-auto bg-gray-300 rounded-full appearance-none player-range-input [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-zinc-400 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md"
-                    />
-                    <span
-                        class="pr-3 text-sm text-zinc-600 player-range-time"
-                        id="total-time"
-                        >0:00</span
-                    >
+                <div class="flex flex-row mx-3 mt-3 bg-indigo-100 rounded-md min-h-4 player-range-bar">
+                    <span class="pl-3 text-sm text-zinc-600 player-range-time" id="current-time">0:00</span>
+                    <input type="range" min="0" max="100" value="0" id="playback-range" class="flex-grow h-1 mx-2 my-auto bg-gray-300 rounded-full appearance-none player-range-input [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-zinc-400 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md"/>
+                    <span class="pr-3 text-sm text-zinc-600 player-range-time" id="total-time">0:00</span>
                 </div>
                 
-                <!-- Controls -->
-                <div
-                    class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5 player-controls min-h-12"
-                >
-                    <!-- Play Mode (Repeat/Shuffle - Hidden since we loop the track anyway) -->
+                <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5 player-controls min-h-12">
                     <label for="playMode" class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
                         <input type="checkbox" id="playMode" class="hidden peer/playMode" checked disabled/>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat">
@@ -875,14 +698,12 @@
                         </svg>
                     </label>
                     
-                    <!-- Skip Back -->
                     <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime -= 10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-back">
                             <polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line>
                         </svg>
                     </div>
                     
-                    <!-- Play/Pause Button (Controls actual HTML Audio Element) -->
                     <label for="playStatus" class="flex items-center justify-center w-12 h-full cursor-pointer">
                         <input type="checkbox" name="playStatus" id="playStatus" class="hidden peer/playStatus" checked/>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play" id="player-icon-play">
@@ -893,14 +714,12 @@
                         </svg>
                     </label>
                     
-                    <!-- Skip Forward -->
                     <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime += 10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-forward">
                             <polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line>
                         </svg>
                     </div>
                     
-                    <!-- Playlist Icon (Hidden since we have one track) -->
                     <div class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-12 feather feather-list">
                             <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line>
@@ -914,9 +733,7 @@
     </div>
 
 
-    <!-- 1. หน้าแรก (ปุ่มหัวใจ Pixel) -->
     <div id="entry-screen" class="fixed inset-0 z-50 flex items-center justify-center gap-8">
-        <!-- ชีพจรซ้าย -->
         <div class="loading">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -924,9 +741,7 @@
             </svg>
         </div>
         
-        <!-- หัวใจพิกเซล (ปุ่มกด) -->
         <div class="heart" id="heart-button">
-            <!-- แถวที่ 1-11 (ตามโค้ด Uiverse) -->
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
             <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
@@ -940,7 +755,6 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
         </div>
         
-        <!-- ชีพจรขวา (ถูกซ่อนเมื่อ Music Player โผล่) -->
         <div class="loading" id="loading-right">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -948,46 +762,26 @@
             </svg>
         </div>
 
-        <!-- NEW: Cat Loader -->
         <div class="cat-loader-wrapper">
             <div class="catContainer">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 733 673"
-                    class="catbody"
-                >
-                    <path
-                        fill="#ff6b81"
-                        d="M111.002 139.5C270.502 -24.5001 471.503 2.4997 621.002 139.5C770.501 276.5 768.504 627.5 621.002 649.5C473.5 671.5 246 687.5 111.002 649.5C-23.9964 611.5 -48.4982 303.5 111.002 139.5Z"
-                    ></path>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 733 673" class="catbody">
+                    <path fill="#ff6b81" d="M111.002 139.5C270.502 -24.5001 471.503 2.4997 621.002 139.5C770.501 276.5 768.504 627.5 621.002 649.5C473.5 671.5 246 687.5 111.002 649.5C-23.9964 611.5 -48.4982 303.5 111.002 139.5Z"></path>
                     <path fill="#ff6b81" d="M184 9L270.603 159H97.3975L184 9Z"></path>
                     <path fill="#ff6b81" d="M541 0L627.603 150H454.397L541 0Z"></path>
                 </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 158 564"
-                    class="tail"
-                >
-                    <path
-                        fill="#e63946"
-                        d="M5.97602 76.066C-11.1099 41.6747 12.9018 0 51.3036 0V0C71.5336 0 89.8636 12.2558 97.2565 31.0866C173.697 225.792 180.478 345.852 97.0691 536.666C89.7636 553.378 73.0672 564 54.8273 564V564C16.9427 564 -5.4224 521.149 13.0712 488.085C90.2225 350.15 87.9612 241.089 5.97602 76.066Z"
-                    ></path>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 158 564" class="tail">
+                    <path fill="#e63946" d="M5.97602 76.066C-11.1099 41.6747 12.9018 0 51.3036 0V0C71.5336 0 89.8636 12.2558 97.2565 31.0866C173.697 225.792 180.478 345.852 97.0691 536.666C89.7636 553.378 73.0672 564 54.8273 564V564C16.9427 564 -5.4224 521.149 13.0712 488.085C90.2225 350.15 87.9612 241.089 5.97602 76.066Z"></path>
                 </svg>
                 <div class="text">
                     <span class="bigzzz">💖</span>
                     <span class="zzz">💖</span>
                 </div>
             </div>
-            <!-- Wall SVG is not needed for a clean background, so we omit it for cleaner look -->
         </div>
         
     </div>
 
-    <!-- 2. หน้า Terminal (ซ่อนไว้ตอนแรก) -->
     <div id="terminal-screen" class="hidden h-full flex flex-col">
-        <!-- Header -->
         <div class="bg-gray-100 p-2 flex justify-start items-center gap-2 border-b border-gray-300 text-sm select-none">
             <div class="w-3 h-3 rounded-full bg-red-500"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -995,18 +789,13 @@
             <div class="ml-4 text-gray-500">HNY_Surprise.exe</div>
         </div>
 
-        <!-- Terminal Output -->
         <div id="terminal" class="flex-1 p-4 md:p-6 overflow-y-auto space-y-3 code-font text-sm md:text-base leading-relaxed">
-            <!-- Log จะถูกเติมเข้ามาตรงนี้ -->
-        </div>
+            </div>
 
-        <!-- Input Area (ปุ่มกด) -->
         <div id="input-area" class="p-4 border-t border-gray-300 bg-gray-100">
-            <!-- ปุ่มจะถูกเติมเข้ามาตรงนี้ -->
-        </div>
+            </div>
     </div>
 
-    <!-- 3. เพลง (ซ่อนไว้) -->
     <audio id="bg-music" src="https://files.catbox.moe/wpxsyq.mp3" loop></audio>
 
 
@@ -1062,12 +851,12 @@
                 type: 'gallery',
                 buttonText: 'เปิดแกลเลอรี',
                 images: [
-                    'https://files.catbox.moe/3hryre.jpg', // 1
-                    'https://files.catbox.moe/fzvku9.jpg', // 2
-                    'https://files.catbox.moe/p6ftp0.JPG', // 3
-                    'https://files.catbox.moe/a3742g.PNG', // 4
-                    'https://files.catbox.moe/wbsesd.jpg', // 5
-                    'https://files.catbox.moe/9rlltx.jpg'  // 6
+                    'https://files.catbox.moe/3hryre.jpg', 
+                    'https://files.catbox.moe/fzvku9.jpg', 
+                    'https://files.catbox.moe/p6ftp0.JPG',
+                    'https://files.catbox.moe/a3742g.PNG',
+                    'https://files.catbox.moe/wbsesd.jpg',
+                    'https://files.catbox.moe/9rlltx.jpg'
                 ]
             },
             { 
@@ -1202,100 +991,91 @@
             updatePlayPauseIcons(false); // Start paused
 
 
-            // 1. รอคลิกปุ่มหัวใจ (Entry point)
-            // *** FIX: Make onclick async and await setupAudio ***
-            heartButton.onclick = async () => { 
+            // 1. รอคลิกปุ่มหัวใจ (Entry point) - NON-BLOCKING VERSION
+            heartButton.onclick = () => {
+                // 1.1 เปลี่ยนหน้าทันที (UI First)
+                entryScreen.style.transition = 'opacity 0.5s ease-out';
+                entryScreen.style.opacity = '0';
+                setTimeout(() => {
+                    entryScreen.style.display = 'none';
+                }, 500);
                 
-                try {
-                    // 1.0 *** AWAIT AUDIO SETUP ***
-                    await setupAudio();
-                    console.log("Audio setup complete.");
-                    
-                } catch (audioError) {
-                    // ถ้า Audio พัง (เช่น ใน iOS) ก็ช่างมัน ทำต่อไปแบบไม่มีเสียง 'ติ๊ด'
-                    console.error("Audio setup failed, continuing without sound effects:", audioError);
-                    audioReady = false; // Make sure sounds don't try to play
+                terminalScreen.classList.remove('hidden');
                 
-                } finally {
-                    // 1.1 เล่นเพลงตอนกดหัวใจ (ทำต่อไปแม้ audio context จะพัง)
-                    bgMusic.play().catch(e => console.error("Audio play failed:", e));
-                    
-                    // 1.2 โชว์ Music Player
-                    musicPlayerContainer.classList.remove('opacity-0');
-                    musicPlayerContainer.style.opacity = '1';
-                    if (loadingRight) loadingRight.style.display = 'none'; // ซ่อนชีพจรขวา
-                    
-                    // 1.3 ซ่อนปุ่ม (Heart Screen)
-                    entryScreen.style.transition = 'opacity 0.5s ease-out';
-                    entryScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        entryScreen.style.display = 'none';
-                    }, 500);
-                    
-                    // 1.4 โชว์ Terminal
-                    terminalScreen.classList.remove('hidden');
-                    
-                    // 1.5 รีเซ็ต Terminal Style ให้เป็นโหมด Log 
-                    terminal.style.display = ''; 
-                    terminal.style.flexDirection = ''; 
-                    terminal.style.alignItems = ''; 
-                    terminal.style.justifyContent = ''; 
-                    terminal.style.overflowY = 'auto'; 
-                    terminal.innerHTML = ''; 
-                    
-                    // 1.6 เริ่มรันสเต็ปแรก (โชว์ปุ่ม 'เชื่อมต่อ')
-                    showNextButton(); 
+                // รีเซ็ต Style Terminal (เผื่อค้างจากหน้า Final)
+                terminal.style.display = ''; 
+                terminal.style.flexDirection = ''; 
+                terminal.style.alignItems = ''; 
+                terminal.style.justifyContent = ''; 
+                terminal.style.overflowY = 'auto'; 
+                terminal.innerHTML = ''; 
+
+                // 1.2 โชว์ปุ่ม "เชื่อมต่อ" ทันที
+                showNextButton();
+
+                // 1.3 โชว์ Music Player
+                musicPlayerContainer.classList.remove('opacity-0');
+                musicPlayerContainer.style.opacity = '1';
+                if (loadingRight) loadingRight.style.display = 'none'; 
+
+                // 1.4 เริ่มเล่นเพลงและโหลดเสียงในพื้นหลัง (ไม่ Blocking)
+                bgMusic.play().catch(e => console.error("Audio autoplay failed:", e));
+                
+                if (typeof Tone !== 'undefined') {
+                    Tone.start().then(() => {
+                        setupAudio();
+                    }).catch(e => console.error("Tone start failed:", e));
                 }
             };
         };
 
         // --- 4. ฟังก์ชันเกี่ยวกับเสียง (Tone.js) ---
-        // *** FIX: Make setupAudio async ***
         async function setupAudio() {
             if (audioReady) return;
-            
-            // We moved the try/catch to the .onclick handler
-            if (typeof Tone === 'undefined') {
-                console.error("Tone.js library not loaded or defined.");
+            try {
+                if (typeof Tone === 'undefined') {
+                    console.error("Tone.js library not loaded or defined.");
+                    audioReady = false;
+                    return;
+                }
+                
+                // Tone.start() is called in onclick already
+                
+                connectSound = new Tone.Synth({
+                    oscillator: { type: 'square' },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
+                }).toDestination();
+                
+                errorSound = new Tone.Synth({
+                    oscillator: { type: 'triangle' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+                }).toDestination();
+                
+                typeSound = new Tone.MonoSynth({
+                    volume: -20,
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.1 }
+                }).toDestination();
+
+                successSound = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }
+                }).toDestination();
+
+                chimeSound = new Tone.PolySynth(Tone.Synth, {
+                    envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                
+                audioReady = true;
+
+            } catch (e) {
+                console.error("Error setting up audio:", e);
                 audioReady = false;
-                return; // Stop here if Tone isn't loaded
             }
-            
-            // *** AWAIT TONE.START() ***
-            // This MUST be inside the user-triggered click event
-            await Tone.start();
-            console.log("Tone.js audio context started.");
-
-            connectSound = new Tone.Synth({
-                oscillator: { type: 'square' },
-                envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
-            }).toDestination();
-            
-            errorSound = new Tone.Synth({
-                oscillator: { type: 'triangle' },
-                envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
-            }).toDestination();
-            
-            typeSound = new Tone.MonoSynth({
-                volume: -20,
-                oscillator: { type: 'sine' },
-                envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.1 }
-            }).toDestination();
-
-            successSound = new Tone.Synth({
-                oscillator: { type: 'sine' },
-                envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }
-            }).toDestination();
-
-            chimeSound = new Tone.PolySynth(Tone.Synth, {
-                envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 }
-            }).toDestination();
-            
-            audioReady = true;
         }
 
         function playSound(sound, note, duration = '16n') {
-            if (!audioReady || !sound) return; // Check audioReady flag
+            if (!audioReady || !sound) return;
             try {
                 sound.triggerAttackRelease(note, duration);
             } catch (e) {
