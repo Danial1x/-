@@ -14,6 +14,9 @@
     <!-- 3. Confetti (พลุ) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <!-- 4. Tone.js (เสียง) - เอา Tone.js กลับมา -->
+    <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+    
     <style>
         body {
             font-family: 'Kanit', sans-serif;
@@ -42,11 +45,10 @@
             gap: 2rem;
             padding: 1rem;
             flex-wrap: wrap;
-            /* ลบ position: fixed ออกจาก entry-screen เพื่อไม่ให้มันบล็อก Terminal */
             position: absolute; 
             inset: 0;
             z-index: 50;
-            transition: opacity 0.5s ease-out; /* เพิ่ม transition */
+            transition: opacity 0.5s ease-out; 
         }
         
         /* Pixel Heart (Uiverse.io by anandita-3217) */
@@ -251,16 +253,17 @@
             box-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
         }
 
-        /* --- NEW: Floating Button Container --- */
+        /* --- NEW: Floating Button Container (ตำแหน่งสวยๆ) --- */
         #floating-button-container {
             position: fixed;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
+            bottom: 30px; /* ขอบล่าง */
+            right: 30px; /* ขอบขวา */
             z-index: 90;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* ชิดขวา */
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* --- 3. CSS Loading Animations --- */
@@ -827,7 +830,7 @@
     </div>
     
     <!-- 3. NEW: Floating Button Container (สำหรับปุ่ม Connect/Run/Submit) -->
-    <div id="floating-button-container" class="hidden fixed bottom-5 left-1/2 transform -translate-x-1/2 z-90 p-4">
+    <div id="floating-button-container" class="hidden fixed bottom-30 right-30 z-90 p-4">
         <!-- ปุ่มจะถูกเติมเข้ามาตรงนี้ -->
     </div>
 
@@ -1023,7 +1026,7 @@
             updatePlayPauseIcons(false);
 
 
-            // 1. รอคลิกปุ่มหัวใจ (Entry point) - NON-BLOCKING & SILENT VERSION
+            // 1. รอคลิกปุ่มหัวใจ (Entry point)
             heartButton.onclick = () => { 
                 
                 // 1.1 เปลี่ยนหน้าทันที (UI First)
@@ -1056,7 +1059,7 @@
             };
         };
 
-        // --- 4. ฟังก์ชันหลักของ Terminal (ลบ PlaySound ออกหมด) ---
+        // --- 4. ฟังก์ชันหลักของ Terminal ---
         
         // พิมพ์ข้อความ (Auto-typing)
         function typeWriter(element, text, callback) {
