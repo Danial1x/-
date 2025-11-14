@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You 💖</title>
     
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 2. Fonts (Kanit for Thai, Fira Code for code) -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
+    <!-- 3. Confetti (พลุ) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
-
+    <!-- NOTE: TONE.JS ถูกลบออกแล้ว -->
+    
     <style>
         body {
             font-family: 'Kanit', sans-serif;
@@ -33,7 +36,7 @@
         
         /* --- 1. CSS หน้าแรก (Pixel Heart) --- */
         #entry-screen {
-            background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
+            background-color: #fce4ec;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -634,6 +637,7 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
+    <!-- Hidden Fancy Loader HTML for cloning in JS -->
     <div id="fancyLoaderTemplate" class="hidden">
         <div class="loader-fancy">
             <div class="container">
@@ -654,9 +658,12 @@
         </div>
     </div>
 
-    <div id="music-player-container" class="transition-opacity duration-1000 opacity-0 transform scale-90">
+    <!-- GLOBAL MUSIC PLAYER -->
+    <div id="music-player-container">
         <div class="flex flex-col items-center select-none">
+            <!-- ส่วนควบคุม (Card) -->
             <div class="z-30 flex flex-col transition-all duration-300 bg-white shadow-md rounded-2xl player-card">
+                <!-- ชื่อเพลง/ปกเพลง -->
                 <div class="flex flex-row w-full player-disc-area">
                     <div class="relative flex items-center justify-center w-24 h-24 transition-all duration-100 player-disc-small">
                         <svg width="96" height="96" viewBox="0 0 128 128" class="duration-500 border-4 rounded-full shadow-md disk-svg border-zinc-400 border-spacing-5">
@@ -683,12 +690,14 @@
                     </div>
                 </div>
                 
+                <!-- Time Bar -->
                 <div class="flex flex-row mx-3 mt-3 bg-indigo-100 rounded-md min-h-4 player-range-bar">
                     <span class="pl-3 text-sm text-zinc-600 player-range-time" id="current-time">0:00</span>
                     <input type="range" min="0" max="100" value="0" id="playback-range" class="flex-grow h-1 mx-2 my-auto bg-gray-300 rounded-full appearance-none player-range-input [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-zinc-400 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md"/>
                     <span class="pr-3 text-sm text-zinc-600 player-range-time" id="total-time">0:00</span>
                 </div>
                 
+                <!-- Controls -->
                 <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5 player-controls min-h-12">
                     <label for="playMode" class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
                         <input type="checkbox" id="playMode" class="hidden peer/playMode" checked disabled/>
@@ -733,7 +742,9 @@
     </div>
 
 
+    <!-- 1. หน้าแรก (ปุ่มหัวใจ Pixel) -->
     <div id="entry-screen" class="fixed inset-0 z-50 flex items-center justify-center gap-8">
+        <!-- ชีพจรซ้าย -->
         <div class="loading">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -741,7 +752,9 @@
             </svg>
         </div>
         
+        <!-- หัวใจพิกเซล (ปุ่มกด) -->
         <div class="heart" id="heart-button">
+            <!-- แถวที่ 1-11 (ตามโค้ด Uiverse) -->
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
             <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
@@ -755,6 +768,7 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
         </div>
         
+        <!-- ชีพจรขวา -->
         <div class="loading" id="loading-right">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -762,6 +776,7 @@
             </svg>
         </div>
 
+        <!-- NEW: Cat Loader -->
         <div class="cat-loader-wrapper">
             <div class="catContainer">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 733 673" class="catbody">
@@ -781,7 +796,9 @@
         
     </div>
 
+    <!-- 2. หน้า Terminal (ซ่อนไว้ตอนแรก) -->
     <div id="terminal-screen" class="hidden h-full flex flex-col">
+        <!-- Header -->
         <div class="bg-gray-100 p-2 flex justify-start items-center gap-2 border-b border-gray-300 text-sm select-none">
             <div class="w-3 h-3 rounded-full bg-red-500"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -789,13 +806,18 @@
             <div class="ml-4 text-gray-500">HNY_Surprise.exe</div>
         </div>
 
+        <!-- Terminal Output -->
         <div id="terminal" class="flex-1 p-4 md:p-6 overflow-y-auto space-y-3 code-font text-sm md:text-base leading-relaxed">
-            </div>
+            <!-- Log จะถูกเติมเข้ามาตรงนี้ -->
+        </div>
 
+        <!-- Input Area (ปุ่มกด) -->
         <div id="input-area" class="p-4 border-t border-gray-300 bg-gray-100">
-            </div>
+            <!-- ปุ่มจะถูกเติมเข้ามาตรงนี้ -->
+        </div>
     </div>
 
+    <!-- 3. เพลง (ซ่อนไว้) -->
     <audio id="bg-music" src="https://files.catbox.moe/wpxsyq.mp3" loop></audio>
 
 
@@ -832,9 +854,7 @@
         `;
 
         let currentStep = 0;
-        let audioReady = false;
-        let connectSound, errorSound, typeSound, successSound, chimeSound;
-
+        
         // --- 2. เนื้อเรื่องของเรา (แก้ไขตรงนี้) ---
         const storySteps = [
             { 
@@ -851,12 +871,12 @@
                 type: 'gallery',
                 buttonText: 'เปิดแกลเลอรี',
                 images: [
-                    'https://files.catbox.moe/3hryre.jpg', 
-                    'https://files.catbox.moe/fzvku9.jpg', 
-                    'https://files.catbox.moe/p6ftp0.JPG',
-                    'https://files.catbox.moe/a3742g.PNG',
-                    'https://files.catbox.moe/wbsesd.jpg',
-                    'https://files.catbox.moe/9rlltx.jpg'
+                    'https://files.catbox.moe/3hryre.jpg', // 1
+                    'https://files.catbox.moe/fzvku9.jpg', // 2
+                    'https://files.catbox.moe/p6ftp0.JPG', // 3
+                    'https://files.catbox.moe/a3742g.PNG', // 4
+                    'https://files.catbox.moe/wbsesd.jpg', // 5
+                    'https://files.catbox.moe/9rlltx.jpg'  // 6
                 ]
             },
             { 
@@ -907,23 +927,19 @@
 
         // --- 3. รอโหลดหน้าเว็บเสร็จค่อยทำงาน ---
         window.onload = () => {
-            const playStatusCheckbox = document.getElementById('playStatus');
-            const playerIconPlay = document.getElementById('player-icon-play');
-            const playerIconPause = document.getElementById('player-icon-pause');
 
-            // Function to update the music player details
+            // Function to update the music player details 
             function updatePlayerDetails() {
                 const songName = document.getElementById('current-song-name');
                 const artistName = document.getElementById('current-artist');
-                
-                // Get duration only when metadata is loaded
+                const playStatusCheckbox = document.getElementById('playStatus');
+
                 if (bgMusic.readyState > 0) {
                     document.getElementById('total-time').innerText = formatTime(bgMusic.duration);
-                    playStatusCheckbox.checked = !bgMusic.paused;
+                    // playStatusCheckbox.checked = !bgMusic.paused; // Commented out to prevent initial check failure
                     updatePlayPauseIcons(!bgMusic.paused);
                 }
                 
-                // Simple placeholder for song name
                 songName.innerText = "NPY (New Year's Present)";
                 artistName.innerText = "Polycat";
             }
@@ -956,6 +972,10 @@
                 }
             });
 
+            const playerIconPlay = document.getElementById('player-icon-play');
+            const playerIconPause = document.getElementById('player-icon-pause');
+            const playStatusCheckbox = document.getElementById('playStatus');
+            
             function updatePlayPauseIcons(isPlaying) {
                  if (isPlaying) {
                     playerIconPlay.style.display = 'none';
@@ -975,7 +995,6 @@
                 }
             });
 
-            // Initial load check for metadata (for duration)
             bgMusic.addEventListener('loadedmetadata', updatePlayerDetails);
             bgMusic.addEventListener('play', () => {
                  playStatusCheckbox.checked = true;
@@ -986,13 +1005,13 @@
                  updatePlayPauseIcons(false);
             });
 
-            // Set initial player details
             updatePlayerDetails();
-            updatePlayPauseIcons(false); // Start paused
+            updatePlayPauseIcons(false);
 
 
-            // 1. รอคลิกปุ่มหัวใจ (Entry point) - NON-BLOCKING VERSION
-            heartButton.onclick = () => {
+            // 1. รอคลิกปุ่มหัวใจ (Entry point) - NON-BLOCKING & SILENT VERSION
+            heartButton.onclick = () => { 
+                
                 // 1.1 เปลี่ยนหน้าทันที (UI First)
                 entryScreen.style.transition = 'opacity 0.5s ease-out';
                 entryScreen.style.opacity = '0';
@@ -1010,92 +1029,30 @@
                 terminal.style.overflowY = 'auto'; 
                 terminal.innerHTML = ''; 
 
-                // 1.2 โชว์ปุ่ม "เชื่อมต่อ" ทันที
+                // 1.2 โชว์ปุ่ม "เชื่อมต่อ" ทันที (Non-Blocking)
                 showNextButton();
 
-                // 1.3 โชว์ Music Player
+                // 1.3 โชว์ Music Player (Non-Blocking)
                 musicPlayerContainer.classList.remove('opacity-0');
                 musicPlayerContainer.style.opacity = '1';
-                if (loadingRight) loadingRight.style.display = 'none'; 
 
-                // 1.4 เริ่มเล่นเพลงและโหลดเสียงในพื้นหลัง (ไม่ Blocking)
+                // 1.4 เริ่มเล่นเพลง (Non-Blocking)
                 bgMusic.play().catch(e => console.error("Audio autoplay failed:", e));
-                
-                if (typeof Tone !== 'undefined') {
-                    Tone.start().then(() => {
-                        setupAudio();
-                    }).catch(e => console.error("Tone start failed:", e));
-                }
             };
         };
 
-        // --- 4. ฟังก์ชันเกี่ยวกับเสียง (Tone.js) ---
-        async function setupAudio() {
-            if (audioReady) return;
-            try {
-                if (typeof Tone === 'undefined') {
-                    console.error("Tone.js library not loaded or defined.");
-                    audioReady = false;
-                    return;
-                }
-                
-                // Tone.start() is called in onclick already
-                
-                connectSound = new Tone.Synth({
-                    oscillator: { type: 'square' },
-                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
-                }).toDestination();
-                
-                errorSound = new Tone.Synth({
-                    oscillator: { type: 'triangle' },
-                    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
-                }).toDestination();
-                
-                typeSound = new Tone.MonoSynth({
-                    volume: -20,
-                    oscillator: { type: 'sine' },
-                    envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.1 }
-                }).toDestination();
-
-                successSound = new Tone.Synth({
-                    oscillator: { type: 'sine' },
-                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }
-                }).toDestination();
-
-                chimeSound = new Tone.PolySynth(Tone.Synth, {
-                    envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 }
-                }).toDestination();
-                
-                audioReady = true;
-
-            } catch (e) {
-                console.error("Error setting up audio:", e);
-                audioReady = false;
-            }
-        }
-
-        function playSound(sound, note, duration = '16n') {
-            if (!audioReady || !sound) return;
-            try {
-                sound.triggerAttackRelease(note, duration);
-            } catch (e) {
-                // console.error("Sound play error:", e);
-            }
-        }
-
-
-        // --- 5. ฟังก์ชันหลักของ Terminal ---
-
+        // --- 4. ฟังก์ชันหลักของ Terminal (ลบ PlaySound ออกหมด) ---
+        
         // พิมพ์ข้อความ (Auto-typing)
         function typeWriter(element, text, callback) {
             let i = 0;
-            element.innerHTML = ''; // เคลียร์ข้อความเก่า
+            element.innerHTML = ''; 
             
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
                     i++;
-                    setTimeout(type, 30); // ความเร็วพิมพ์
+                    setTimeout(type, 30);
                 } else {
                     if (callback) callback();
                 }
@@ -1107,26 +1064,25 @@
         function logToTerminal(text, type = 'command') {
             const line = document.createElement('div');
             if (type === 'command') {
-                line.innerHTML = `<span class="text-pink-600">&gt;</span> ${text}`; // สีชมพูเข้ม
+                line.innerHTML = `<span class="text-pink-600">&gt;</span> ${text}`;
             } else if (type === 'result') {
-                line.className = 'text-gray-700'; // ใช้สีเข้ม
+                line.className = 'text-gray-700';
                 line.innerText = '';
             } else if (type === 'error') {
-                line.className = 'text-red-600'; // สีเข้มขึ้น
+                line.className = 'text-red-600';
                 line.innerText = text;
             } else if (type === 'loader') {
-                line.innerHTML = text; // ใส่ HTML ของ Loader ได้เลย
+                line.innerHTML = text;
             } else if (type === 'ascii') {
-                line.className = 'text-pink-600 whitespace-pre'; // สีเข้มขึ้น
+                line.className = 'text-pink-600 whitespace-pre';
                 line.innerText = text;
             } else if (type === 'gallery') {
-                line.className = 'gallery-container'; // CSS container ของแกลเลอรี
-                // เนื้อหาจะถูกสร้างโดยฟังก์ชัน Gallery
+                line.className = 'gallery-container';
             }
             
             terminal.appendChild(line);
             terminal.scrollTop = terminal.scrollHeight;
-            return line; // คืนค่า element ไว้
+            return line;
         }
 
         // นับเปอร์เซ็นต์
@@ -1137,16 +1093,14 @@
             const interval = setInterval(() => {
                 percent++;
                 line.innerText = `${startText} ${percent}%...`;
-                playSound(connectSound, 'C5', '32n');
                 
                 if (percent >= 100) {
                     clearInterval(interval);
                     line.innerText = `${startText} ${percent}%... ${endText}`;
-                    playSound(chimeSound, ['C5', 'E5', 'G5'], '8n');
                     
                     setTimeout(() => {
                         if (callback) callback();
-                    }, 500); // ดีเลย์หลังเชื่อมต่อสำเร็จ
+                    }, 500); 
                 }
             }, 25);
         }
@@ -1157,9 +1111,8 @@
             function drawLine() {
                 if (i < artArray.length) {
                     logToTerminal(artArray[i], 'ascii');
-                    playSound(connectSound, 'D5', '32n');
                     i++;
-                    setTimeout(drawLine, 200); // ดีเลย์ 200ms
+                    setTimeout(drawLine, 200); 
                 } else {
                     if (callback) callback();
                 }
@@ -1183,7 +1136,7 @@
                     gravity: 1.2,
                     decay: 0.95,
                     scalar: 1.2,
-                    colors: ['#ffc0cb', '#e63946', '#f1a1b4', '#ffffff'] // ชมพู/แดง/ขาว
+                    colors: ['#ffc0cb', '#e63946', '#f1a1b4', '#ffffff'] 
                 });
             };
 
@@ -1191,8 +1144,8 @@
                 if (Date.now() > animationEnd) {
                     return clearInterval(interval);
                 }
-                shoot({ origin: { x: 0, y: 0.7 } }); // ซ้าย
-                shoot({ origin: { x: 1, y: 0.7 } }); // ขวา
+                shoot({ origin: { x: 0, y: 0.7 } });
+                shoot({ origin: { x: 1, y: 0.7 } });
             }, 250);
         }
 
@@ -1205,7 +1158,6 @@
             button.innerText = step.buttonText;
             button.className = 'run-button';
             button.onclick = () => {
-                playSound(connectSound, 'A4');
                 runCurrentStep();
             };
 
@@ -1226,7 +1178,7 @@
                 if (currentStep < storySteps.length) {
                     showNextButton();
                 } else {
-                    inputArea.innerHTML = '<div class="text-red-400 code-font">--- CONNECTION TERMINATED ---</div>';
+                    inputArea.innerHTML = '<div class="text-red-400 code-font">--- END OF TRANSMISSION ---</div>';
                 }
             });
         }
@@ -1250,26 +1202,21 @@
                 typeWriter(line, textToType, onComplete);
             } 
 
-            // *** NEW LOGIC: Bulk Preload Gallery Images ***
+            // *** Bulk Preload Gallery Images ***
             else if (step.type === 'gallery') {
-                // 1. Show preloading indicator in the terminal area
-                // *** Apply Centering Styles for the Preloader ***
                 terminal.style.display = 'flex';
                 terminal.style.flexDirection = 'column';
                 terminal.style.alignItems = 'center';
                 terminal.style.justifyContent = 'center';
                 terminal.style.overflowY = 'hidden'; 
                 terminal.innerHTML = '';
-                // ********************************************
 
-                // 2. Define the Preloading function (based on Promises)
                 const startBulkPreload = () => {
                     return new Promise(resolve => {
                         let loadedCount = 0;
                         let totalImages = step.images.length;
                         const preloadedImages = [];
                         
-                        // Display loading status using the fancy loader
                         const preloaderLine = document.createElement('div');
                         preloaderLine.className = 'gallery-container flex-col !items-center !justify-center p-8';
                         preloaderLine.innerHTML = `
@@ -1286,18 +1233,14 @@
                             img.onload = img.onerror = () => {
                                 loadedCount++;
                                 statusElement.innerText = `กำลังโหลดความทรงจำ (${loadedCount}/${totalImages})...`;
-                                playSound(connectSound, 'C5', '32n');
                                 
-                                // Store the loaded image object for instant access later
                                 if (img.complete && img.naturalHeight !== 0) {
                                     preloadedImages.push(img); 
                                 } else {
-                                    // Handle broken image link
                                     preloadedImages.push({src: src, alt: "Load Error"});
                                 }
                                 
                                 if (loadedCount === totalImages) {
-                                    // Filter out incomplete/broken images before resolving if needed, but here we keep them to match the count
                                     resolve(preloadedImages.filter(img => img.src)); 
                                 }
                             };
@@ -1306,11 +1249,7 @@
                     });
                 };
 
-                // 3. Start preloading
                 startBulkPreload().then(preloadedImages => {
-                    // 4. Once all are loaded, draw the gallery UI instantly
-                    
-                    // Reset centering styles for gallery view
                     terminal.style.display = '';
                     terminal.style.flexDirection = '';
                     terminal.style.alignItems = '';
@@ -1338,7 +1277,6 @@
                     const counterElement = galleryContainer.querySelector('#imageCounter');
 
                     const updateImage = (index) => {
-                        // Use preloaded image objects for instant display
                         const img = preloadedImages[index];
                         
                         imgElement.style.opacity = '0'; 
@@ -1357,7 +1295,6 @@
                         if (currentImageIndex > 0) {
                             currentImageIndex--;
                             updateImage(currentImageIndex);
-                            playSound(connectSound, 'C5');
                         }
                     };
                     
@@ -1365,15 +1302,13 @@
                         if (currentImageIndex < preloadedImages.length - 1) {
                             currentImageIndex++;
                             updateImage(currentImageIndex);
-                            playSound(connectSound, 'E5');
                         }
                     };
 
-                    updateImage(0); // Show the first image instantly
+                    updateImage(0); 
                     onComplete();
                 });
             }
-            // *** END NEW LOGIC ***
             
             else if (step.type === 'ascii') {
                 const loader1 = logToTerminal(
@@ -1420,11 +1355,9 @@
                     function checkAnswer() {
                         const answer = inputField.value;
                         if (answer.trim() === step.correctAnswer) {
-                            playSound(successSound, 'G5');
                             logToTerminal(`รหัสถูกต้อง: ${answer}`, 'command');
                             onComplete();
                         } else {
-                            playSound(errorSound, 'C3', '4n');
                             logToTerminal(`รหัสผิดพลาด! '${answer}' ไม่ถูกต้อง`, 'error');
                             inputField.value = '';
                             inputField.focus();
@@ -1435,19 +1368,15 @@
             
             else if (step.type === 'final') {
                 
-                // 1. Clear terminal output area and show full screen loader
                 terminal.innerHTML = ''; 
                 inputArea.innerHTML = '';
                 
-                // *** Apply Centering Styles for the Loader ***
                 terminal.style.display = 'flex';
                 terminal.style.flexDirection = 'column';
                 terminal.style.alignItems = 'center';
                 terminal.style.justifyContent = 'center';
                 terminal.style.overflowY = 'hidden'; 
-                // ********************************************
 
-                // 2. Simple Beating Heart Loader HTML
                 const loaderHtml = `
                     <div class="heartbeatloader-container">
                         <div class="text-3xl font-bold mb-4" style="background-image: linear-gradient(90deg, #ff0037 0%, #ff2c7d 10%); -webkit-background-clip: text; color: transparent;">
@@ -1462,13 +1391,11 @@
 
                 const finalLoader = logToTerminal(loaderHtml, 'loader');
                 
-                // 3. Delay the actual surprise (Confetti + Final Message)
                 setTimeout(() => {
-                    // 4. Clear the loader
                     finalLoader.remove();
                     terminal.innerHTML = ''; 
                     
-                    launchConfetti(); // Bang!
+                    launchConfetti();
                     
                     const finalMessageText = "Happy New Year 2026!\nถึงตัวจะไกล... แต่ใจไม่เคยห่างนะ\nขอให้ปีหน้าเป็นปีที่มีแต่ความสุข\nรักนะอิน! 💖"; 
                     const finalCardHtml = `
@@ -1486,13 +1413,11 @@
                         </div>
                     `;
                     
-                    // The centering styles applied above will handle the card positioning
                     terminal.innerHTML = finalCardHtml;
                     
                     onComplete(); 
 
-                }, 5000); // 5 seconds loading time
-
+                }, 5000);
             }
         }
         
