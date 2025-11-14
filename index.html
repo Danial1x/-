@@ -648,6 +648,48 @@
             stroke: #e63946 !important;
         }
         
+        /* --- 7. NEW: Mobile Responsive Fixes --- */
+        @media (max-width: 640px) {
+            /* หน้าแรก: ซ่อนชีพจรที่เกะกะ */
+            .loading {
+                display: none;
+            }
+            
+            /* หน้าแรก: ย่อ Music Player ลงอีก */
+            #music-player-container {
+                transform: scale(0.8);
+                top: 5px;
+                right: 5px;
+            }
+
+            /* Terminal: ย่อ ASCII Art ไม่ให้ล้นจอ */
+            .text-pink-600.whitespace-pre {
+                font-size: 0.6rem; /* 9.6px */
+                line-height: 1rem; /* 16px */
+            }
+
+            /* Terminal: ย่อ Gallery Image */
+            .gallery-image {
+                max-height: 300px;
+            }
+
+            /* Terminal: ย้ายปุ่มลอยไม่ให้ชิดขอบ */
+            #floating-button-container {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            /* Final Card: ปรับขนาดให้พอดีจอเล็ก */
+            .card {
+                width: 95%;
+                min-height: auto;
+                padding: 15px;
+            }
+            .card-body {
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
