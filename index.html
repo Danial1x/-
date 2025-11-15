@@ -21,19 +21,12 @@
         body {
             font-family: 'Kanit', sans-serif;
             background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
+            min-height: 100vh;
         }
         .code-font { font-family: 'Fira Code', monospace; }
 
         /* --- Global Music Player Position --- */
-        #music-player-container {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
-            opacity: 0; /* ซ่อนไว้ก่อน */
-            transition: opacity 0.5s ease-out;
-            transform: scale(0.9);
-        }
+        /* ถูกลบออกเพื่อให้ไม่เกะกะมือถือ */
         
         /* --- 1. CSS หน้าแรก (Pixel Heart) --- */
         #entry-screen {
@@ -206,6 +199,7 @@
         #terminal-screen {
             background-color: #fce4ec;
             color: #333333;
+            min-height: 100vh;
         }
         
         .cursor-blink {
@@ -580,73 +574,7 @@
         }
         
         /* --- Music Player CSS --- */
-        .player-card {
-            height: 10rem;
-            width: 18rem;
-            transition: none;
-            background-color: #fff !important;
-            box-shadow: 5px 5px 8px #ff99aa !important;
-        }
-        .player-disc-area {
-            height: 5rem;
-        }
-        .player-disc-small {
-            opacity: 1;
-            transition: none;
-            top: -1.5rem;
-            left: -1rem;
-        }
-        .player-disc-small .disk-svg {
-            animation: spin 3s linear infinite; 
-        }
-        .player-text-area {
-            margin-left: -0.75rem;
-            overflow: hidden;
-            text-wrap: nowrap;
-        }
-        .player-range-bar {
-            margin-top: 0;
-            background-color: #f1a1b4 !important;
-        }
-        .player-range-time {
-            display: inline-block;
-        }
-        .player-range-input {
-            width: 100%;
-        }
-        .player-range-input::-webkit-slider-thumb {
-            border-color: #e63946 !important;
-            background-color: #ffc0cb !important;
-        }
-        .player-controls-hidden {
-            width: 3rem;
-        }
-        .disk-svg {
-            border-color: #ff6b81 !important;
-        }
-        .disk-svg path[fill="purple"], .disk-svg path[fill="mediumpurple"], .disk-svg path[fill="rebeccapurple"] {
-            fill: #e63946 !important;
-        }
-        .disk-svg path[fill="mediumpurple"] {
-            fill: #ff2c7d !important;
-        }
-        .disk-svg path[fill="rebeccapurple"] {
-            fill: #ff6b81 !important;
-        }
-        .disk-center {
-            background-color: #ffc0cb !important;
-            border-color: #e63946 !important;
-        }
-        .player-name {
-            color: #e63946 !important;
-        }
-        .player-artist {
-            color: #ff6b81 !important;
-        }
-        .player-controls svg {
-            color: #e63946 !important;
-            stroke: #e63946 !important;
-        }
+        /* ถูกลบออกเพื่อให้ไม่เกะกะมือถือ */
         
         /* --- 7. NEW: Mobile Responsive Fixes --- */
         @media (max-width: 640px) {
@@ -655,13 +583,6 @@
                 display: none;
             }
             
-            /* หน้าแรก: ย่อ Music Player ลงอีก */
-            #music-player-container {
-                transform: scale(0.8);
-                top: 5px;
-                right: 5px;
-            }
-
             /* Terminal: ย่อ ASCII Art ไม่ให้ล้นจอ */
             .text-pink-600.whitespace-pre {
                 font-size: 0.6rem; /* 9.6px */
@@ -715,88 +636,9 @@
         </div>
     </div>
 
-    <!-- GLOBAL MUSIC PLAYER -->
-    <div id="music-player-container">
-        <div class="flex flex-col items-center select-none">
-            <!-- ส่วนควบคุม (Card) -->
-            <div class="z-30 flex flex-col transition-all duration-300 bg-white shadow-md rounded-2xl player-card">
-                <!-- ชื่อเพลง/ปกเพลง -->
-                <div class="flex flex-row w-full player-disc-area">
-                    <div class="relative flex items-center justify-center w-24 h-24 transition-all duration-100 player-disc-small">
-                        <svg width="96" height="96" viewBox="0 0 128 128" class="duration-500 border-4 rounded-full shadow-md disk-svg border-zinc-400 border-spacing-5">
-                             <rect width="128" height="128" fill="black"></rect>
-                            <circle cx="20" cy="20" r="2" fill="white"></circle>
-                            <circle cx="40" cy="30" r="2" fill="white"></circle>
-                            <circle cx="60" cy="10" r="2" fill="white"></circle>
-                            <circle cx="80" cy="40" r="2" fill="white"></circle>
-                            <circle cx="100" cy="20" r="2" fill="white"></circle>
-                            <circle cx="120" cy="50" r="2" fill="white"></circle>
-                            <circle cx="90" cy="30" r="10" fill="white" fill-opacity="0.5"></circle>
-                            <circle cx="90" cy="30" r="8" fill="white"></circle>
-                            <path d="M0 128 Q32 64 64 128 T128 128" fill="purple" stroke="black" stroke-width="1"></path>
-                            <path d="M0 128 Q32 48 64 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
-                            <path d="M0 128 Q32 32 64 128 T128 128" fill="rebeccapurple" stroke="black" stroke-width="1"></path>
-                            <path d="M0 128 Q16 64 32 128 T64 128" fill="purple" stroke="black" stroke-width="1"></path>
-                            <path d="M64 128 Q80 64 96 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
-                        </svg>
-                        <div class="absolute z-10 w-6 h-6 rounded-full shadow-sm top-9 left-9 bg-white disk-center border-4 border-zinc-400"></div>
-                    </div>
-                    <div class="flex flex-col justify-center w-full pl-3 player-text-area">
-                        <p class="text-xl font-bold player-name" id="current-song-name">My Love Song</p>
-                        <p class="text-zinc-600 player-artist" id="current-artist">อิน & แฟน</p>
-                    </div>
-                </div>
-                
-                <!-- Time Bar -->
-                <div class="flex flex-row mx-3 mt-3 bg-indigo-100 rounded-md min-h-4 player-range-bar">
-                    <span class="pl-3 text-sm text-zinc-600 player-range-time" id="current-time">0:00</span>
-                    <input type="range" min="0" max="100" value="0" id="playback-range" class="flex-grow h-1 mx-2 my-auto bg-gray-300 rounded-full appearance-none player-range-input [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-zinc-400 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md"/>
-                    <span class="pr-3 text-sm text-zinc-600 player-range-time" id="total-time">0:00</span>
-                </div>
-                
-                <!-- Controls -->
-                <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5 player-controls min-h-12">
-                    <label for="playMode" class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
-                        <input type="checkbox" id="playMode" class="hidden peer/playMode" checked disabled/>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat">
-                            <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-                            <polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-                        </svg>
-                    </label>
-                    
-                    <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime -= 10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-back">
-                            <polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line>
-                        </svg>
-                    </div>
-                    
-                    <label for="playStatus" class="flex items-center justify-center w-12 h-full cursor-pointer">
-                        <input type="checkbox" name="playStatus" id="playStatus" class="hidden peer/playStatus" checked/>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play" id="player-icon-play">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pause" id="player-icon-pause">
-                            <rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>
-                        </svg>
-                    </label>
-                    
-                    <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime += 10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-forward">
-                            <polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line>
-                        </svg>
-                    </div>
-                    
-                    <div class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-12 feather feather-list">
-                            <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line>
-                            <line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line>
-                            <line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- GLOBAL MUSIC PLAYER (ถูกซ่อน UI ไว้ แต่ Audio Element ยังอยู่) -->
+    <!-- ลบ UI ออก แต่เก็บ Audio Element ไว้ด้านล่าง -->
+    <audio id="bg-music" src="https://files.catbox.moe/wpxsyq.mp3" loop></audio>
 
 
     <!-- 1. หน้าแรก (ปุ่มหัวใจ Pixel) -->
@@ -815,7 +657,7 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
             <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
-            <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div classs="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
+            <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
             <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
@@ -825,7 +667,7 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
         </div>
         
-        <!-- ชีพจรขวา (ถูกซ่อนเมื่อ Music Player โผล่) -->
+        <!-- ชีพจรขวา -->
         <div class="loading" id="loading-right">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -865,7 +707,6 @@
                     <span class="zzz">💖</span>
                 </div>
             </div>
-            <!-- Wall SVG is not needed for a clean background, so we omit it for cleaner look -->
         </div>
         
     </div>
@@ -889,13 +730,13 @@
     </div>
     
     <!-- 3. NEW: Floating Button Container (สำหรับปุ่ม Connect/Run/Submit) -->
-    <div id="floating-button-container" class="hidden fixed bottom-10 right-10 z-90 p-4">
+    <div id="floating-button-container" class="fixed bottom-30 right-30 z-90 p-4">
         <!-- ปุ่มจะถูกเติมเข้ามาตรงนี้ -->
     </div>
 
 
     <!-- 4. เพลง (ซ่อนไว้) -->
-    <audio id="bg-music" src="https://litter.catbox.moe/xmwv8do80o2mbq7e.mp3" loop></audio>
+    <audio id="bg-music" src="https://files.catbox.moe/wpxsyq.mp3" loop></audio>
 
 
     <script>
@@ -904,9 +745,8 @@
         const heartButton = document.getElementById('heart-button');
         const terminalScreen = document.getElementById('terminal-screen');
         const terminal = document.getElementById('terminal');
-        const inputArea = document.getElementById('floating-button-container'); // !!! เปลี่ยนมาใช้ Floating Container !!!
+        const inputArea = document.getElementById('floating-button-container'); // !!! ใช้ Floating Container !!!
         const bgMusic = document.getElementById('bg-music');
-        const musicPlayerContainer = document.getElementById('music-player-container');
         const loadingRight = document.getElementById('loading-right');
         
         let connectSound, errorSound, successSound, chimeSound; // ประกาศตัวแปร SFX
@@ -933,8 +773,8 @@
         `;
 
         let currentStep = 0;
-        let audioReady = false; // กลับมาใช้ audioReady
-        let audioSetupPromise = null; // ใช้ Promise จัดการ
+        let audioReady = false; 
+        let audioSetupPromise = null; 
         
         // --- 2. เนื้อเรื่องของเรา (แก้ไขตรงนี้) ---
         const storySteps = [
@@ -1016,7 +856,6 @@
                 }
                 
                 // *** AWAIT TONE.START() ***
-                // This MUST be inside a user-triggered click event (which heartButton.onclick is)
                 await Tone.start();
                 console.log("Tone.js audio context started.");
 
@@ -1062,12 +901,16 @@
 
         // --- 4. รอโหลดหน้าเว็บเสร็จค่อยทำงาน ---
         window.onload = () => {
-
+            
+            // --- PLAYER CONTROLS SETUP ---
             // Function to update the music player details 
             function updatePlayerDetails() {
                 const songName = document.getElementById('current-song-name');
                 const artistName = document.getElementById('current-artist');
                 const playStatusCheckbox = document.getElementById('playStatus');
+
+                // FIX: Check if elements exist before reading properties
+                if (!songName || !playStatusCheckbox) return;
 
                 if (bgMusic.readyState > 0) {
                     document.getElementById('total-time').innerText = formatTime(bgMusic.duration);
@@ -1084,74 +927,80 @@
                 const remainingSeconds = Math.floor(seconds % 60);
                 return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
             }
-
-            // Update Time Bar
-            bgMusic.addEventListener('timeupdate', () => {
-                const currentTimeElement = document.getElementById('current-time');
-                const totalTimeElement = document.getElementById('total-time');
-                const rangeInput = document.getElementById('playback-range');
-
-                if (bgMusic.duration) {
-                    currentTimeElement.innerText = formatTime(bgMusic.currentTime);
-                    totalTimeElement.innerText = formatTime(bgMusic.duration);
-                    if (document.activeElement !== rangeInput) { // Only update if user is not dragging
-                        rangeInput.value = (bgMusic.currentTime / bgMusic.duration) * 100;
-                    }
-                }
-            });
-
-            // Sync range input with actual playback
-            const rangeInput = document.getElementById('playback-range');
-            rangeInput.addEventListener('input', () => {
-                if (bgMusic.duration) {
-                    bgMusic.currentTime = (rangeInput.value / 100) * bgMusic.duration;
-                }
-            });
-
+            
             const playerIconPlay = document.getElementById('player-icon-play');
             const playerIconPause = document.getElementById('player-icon-pause');
             const playStatusCheckbox = document.getElementById('playStatus');
             
-            function updatePlayPauseIcons(isPlaying) {
-                 if (isPlaying) {
-                    playerIconPlay.style.display = 'none';
-                    playerIconPause.style.display = 'inline-block';
-                 } else {
-                    playerIconPlay.style.display = 'inline-block';
-                    playerIconPause.style.display = 'none';
-                 }
-            }
+            // Check if player controls exist before setting up listeners (for safety)
+            if (playStatusCheckbox) {
+                // Update Time Bar
+                bgMusic.addEventListener('timeupdate', () => {
+                    const currentTimeElement = document.getElementById('current-time');
+                    const totalTimeElement = document.getElementById('total-time');
+                    const rangeInput = document.getElementById('playback-range');
 
-            // Update Play/Pause based on the audio element
-            playStatusCheckbox.addEventListener('change', () => {
-                if (playStatusCheckbox.checked) {
-                    bgMusic.play().catch(e => console.error("Play failed:", e));
-                } else {
-                    bgMusic.pause();
+                    if (bgMusic.duration && rangeInput) {
+                        currentTimeElement.innerText = formatTime(bgMusic.currentTime);
+                        totalTimeElement.innerText = formatTime(bgMusic.duration);
+                        if (document.activeElement !== rangeInput) { // Only update if user is not dragging
+                            rangeInput.value = (bgMusic.currentTime / bgMusic.duration) * 100;
+                        }
+                    }
+                });
+
+                // Sync range input with actual playback
+                const rangeInput = document.getElementById('playback-range');
+                if(rangeInput) {
+                    rangeInput.addEventListener('input', () => {
+                        if (bgMusic.duration) {
+                            bgMusic.currentTime = (rangeInput.value / 100) * bgMusic.duration;
+                        }
+                    });
                 }
-            });
 
-            bgMusic.addEventListener('loadedmetadata', updatePlayerDetails);
-            bgMusic.addEventListener('play', () => {
-                 playStatusCheckbox.checked = true;
-                 updatePlayPauseIcons(true);
-            });
-            bgMusic.addEventListener('pause', () => {
-                 playStatusCheckbox.checked = false;
-                 updatePlayPauseIcons(false);
-            });
 
-            updatePlayerDetails();
-            updatePlayPauseIcons(false);
+                function updatePlayPauseIcons(isPlaying) {
+                     if (isPlaying) {
+                        playerIconPlay.style.display = 'none';
+                        playerIconPause.style.display = 'inline-block';
+                     } else {
+                        playerIconPlay.style.display = 'inline-block';
+                        playerIconPause.style.display = 'none';
+                     }
+                }
+
+                // Update Play/Pause based on the audio element
+                playStatusCheckbox.addEventListener('change', () => {
+                    if (playStatusCheckbox.checked) {
+                        bgMusic.play().catch(e => console.error("Play failed:", e));
+                    } else {
+                        bgMusic.pause();
+                    }
+                });
+
+                bgMusic.addEventListener('loadedmetadata', updatePlayerDetails);
+                bgMusic.addEventListener('play', () => {
+                     playStatusCheckbox.checked = true;
+                     updatePlayPauseIcons(true);
+                });
+                bgMusic.addEventListener('pause', () => {
+                     playStatusCheckbox.checked = false;
+                     updatePlayPauseIcons(false);
+                });
+
+                updatePlayerDetails();
+                updatePlayPauseIcons(false);
+            }
+            // --- END PLAYER CONTROLS SETUP ---
 
 
             // 1. รอคลิกปุ่มหัวใจ (Entry point)
-            // *** FIX: Make onclick async and await setupAudio ***
             heartButton.onclick = async () => { 
                 
                 try {
                     // 1.0 *** AWAIT AUDIO SETUP ***
-                    if (!audioSetupPromise) { // Setup audio only once
+                    if (!audioSetupPromise) { 
                         audioSetupPromise = setupAudio();
                     }
                     await audioSetupPromise;
@@ -1159,22 +1008,29 @@
                     
                 } catch (audioError) {
                     console.error("Audio setup failed, continuing without sound effects:", audioError);
-                    audioReady = false; // Make sure sounds don't try to play
+                    audioReady = false; 
                 
                 } finally {
                     // 1.1 เล่นเพลงตอนกดหัวใจ (ทำต่อไปแม้ audio context จะพัง)
                     // *** FIX: Checkbox state before playing ***
-                    playStatusCheckbox.checked = true; // Set checkbox to 'playing'
-                    updatePlayPauseIcons(true); // Update icon to 'pause'
+                    if(playStatusCheckbox) {
+                        playStatusCheckbox.checked = true; 
+                        updatePlayPauseIcons(true); 
+                    }
                     bgMusic.play().catch(e => {
                         console.error("Audio play failed:", e);
-                        playStatusCheckbox.checked = false; // Revert if play fails
-                        updatePlayPauseIcons(false);
+                        if(playStatusCheckbox) {
+                            playStatusCheckbox.checked = false; 
+                            updatePlayPauseIcons(false);
+                        }
                     });
                     
                     // 1.2 โชว์ Music Player
-                    musicPlayerContainer.classList.remove('opacity-0');
-                    musicPlayerContainer.style.opacity = '1';
+                    const musicPlayerContainer = document.getElementById('music-player-container');
+                    if (musicPlayerContainer) {
+                        musicPlayerContainer.classList.remove('opacity-0');
+                        musicPlayerContainer.style.opacity = '1';
+                    }
                     if (loadingRight) loadingRight.style.display = 'none'; // ซ่อนชีพจรขวา
                     
                     // 1.3 ซ่อนปุ่ม (Heart Screen)
@@ -1202,7 +1058,7 @@
         };
 
         // --- 5. ฟังก์ชันหลักของ Terminal ---
-
+        
         // พิมพ์ข้อความ (Auto-typing)
         function typeWriter(element, text, callback) {
             let i = 0;
@@ -1441,9 +1297,9 @@
 
                     galleryContainer.innerHTML = `
                         <div class="gallery-controls">
-                            <button id="prevButton" class="gallery-button">&lt; ก่อนหน้า</button>
-                            <span id="imageCounter" class="gallery-counter">1 / ${preloadedImages.length}</span>
-                            <button id="nextButton" class="gallery-button">ถัดไป &gt;</button>
+                            <button id="prevButton" class="run-button !py-2 !px-4">&lt; ก่อนหน้า</button>
+                            <span id="imageCounter" class="gallery-counter font-bold text-lg text-pink-600">1 / ${preloadedImages.length}</span>
+                            <button id="nextButton" class="run-button !py-2 !px-4">ถัดไป &gt;</button>
                         </div>
                         <div class="gallery-image-wrapper">
                             <img id="galleryImage" class="gallery-image" alt="Memory ${currentImageIndex+1}">
