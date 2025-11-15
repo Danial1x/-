@@ -16,42 +16,48 @@
     <style>
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #fce4ec;
+            background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
             min-height: 100vh;
-            overflow-x: hidden; /* ห้ามเลื่อนซ้ายขวาเด็ดขาด */
+            /* FIX Mobile: ป้องกันการ scroll แนวนอนที่ body */
+            overflow-x: hidden;
             /* ป้องกันการแตะซ้ำเพื่อซูมในมือถือ */
             touch-action: manipulation; 
         }
         .code-font { font-family: 'Fira Code', monospace; }
+        .font-kanit { font-family: 'Kanit', sans-serif; }
 
-        /* --- 1. หน้าแรก (Entry Screen) --- */
+        /* --- 1. CSS หน้าแรก (Pixel Heart) --- */
         #entry-screen {
             background-color: #fce4ec;
-            position: fixed;
-            inset: 0;
-            z-index: 50;
+            cursor: pointer;
             display: flex;
-            flex-direction: column; /* เรียงแนวตั้ง */
             align-items: center;
             justify-content: center;
             gap: 2rem;
-            transition: opacity 0.5s ease-out;
+            padding: 1rem;
+            flex-wrap: wrap;
+            position: absolute; 
+            inset: 0;
+            z-index: 50;
+            transition: opacity 0.5s ease-out; 
+            overflow: hidden;
         }
-
-        /* Pixel Heart */
+        
+        /* Pixel Heart (Uiverse.io by anandita-3217) */
         .heart {
             display: inline-grid;
-            grid-template-columns: repeat(13, 15px); /* ย่อขนาดพิกเซลให้เล็กลงสำหรับมือถือ */
-            grid-template-rows: repeat(11, 15px);
+            grid-template-columns: repeat(13, 20px);
+            grid-template-rows: repeat(11, 20px);
             gap: 1px;
-            padding: 10px;
+            padding: 20px;
             animation: heartbeat 2s infinite ease-in-out;
             cursor: pointer;
+            flex-shrink: 0; 
         }
-        @media (min-width: 640px) {
+        /* Mobile adjustment for heart */
+        @media (max-width: 640px) {
             .heart {
-                grid-template-columns: repeat(13, 20px);
-                grid-template-rows: repeat(11, 20px);
+                transform: scale(0.8);
             }
         }
 
@@ -59,11 +65,19 @@
         .pixel.pink { background: #e63946; animation: pinkPulse 2.5s infinite ease-in-out; }
         .pixel.soft-pink { background: #f1a1b4; animation: softPinkPulse 2.2s infinite ease-in-out; }
         .pixel.white { background: #ffeaea; animation: whitePulse 2.8s infinite ease-in-out; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        @keyframes pinkPulse { 0%, 100% { background: #ff6b81; transform: scale(1); box-shadow: 0 0 0 rgba(230, 57, 70, 0); } 50% { background: #e63946; transform: scale(1.05); box-shadow: 0 0 10px rgba(230, 57, 70, 0.6); } }
+        @keyframes softPinkPulse { 0%, 100% { background: #e63946; transform: scale(1); box-shadow: 0 0 0 rgba(241, 161, 180, 0); } 50% { background: #f1a1b4; transform: scale(1.05); box-shadow: 0 0 8px rgba(241, 161, 180, 0.6); } }
+        @keyframes whitePulse { 0%, 100% { background: #ffe3e3; transform: scale(1); box-shadow: 0 0 0 rgba(255, 234, 234, 0); } 50% { background: #ffeaea; transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 234, 234, 0.8); } }
 
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        /* (Pulse animations omitted for brevity, same as before) */
-
-        /* Cat Loader Positioning */
+        /* Loading SVG (Uiverse.io by RaspberryBee) */
+        .loading { flex-shrink: 0; }
+        .loading svg polyline { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .loading svg polyline#back { fill: none; stroke: #ff99aa; }
+        .loading svg polyline#front { fill: none; stroke: #e63946; stroke-dasharray: 48, 144; stroke-dashoffset: 192; animation: dash_682 1.4s linear infinite; }
+        @keyframes dash_682 { 72.5% { opacity: 0; } to { stroke-dashoffset: 0; } }
+        
+        /* Cat Loader CSS */
         .cat-loader-wrapper {
             width: fit-content;
             height: fit-content;
@@ -71,10 +85,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: 20px; /* เว้นระยะห่างจากหัวใจ */
+            position: absolute;
+            bottom: 8vh; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
         }
-        /* ย่อแมวลงนิดนึงในมือถือ */
-        .catContainer { transform: scale(0.8); }
+        .catContainer { width: 100%; height: fit-content; display: flex; align-items: center; justify-content: center; position: relative; transform: scale(0.8); }
         .catbody { width: 80px; }
         .catbody path { fill: #ff6b81 !important; }
         .tail { position: absolute; width: 17px; top: 50%; animation: tail 0.5s ease-in infinite alternate-reverse; transform-origin: top; }
@@ -85,130 +102,236 @@
         .bigzzz { font-size: 25px; margin-left: 10px; animation: zzz 2.3s linear infinite; }
         @keyframes zzz { 0% { color: transparent; } 50% { color: #e63946; } 100% { color: transparent; } }
 
-
-        /* --- 2. หน้า Terminal --- */
+        /* --- 2. CSS หน้า Terminal --- */
         #terminal-screen {
             background-color: #fce4ec;
             color: #333333;
-            display: flex;
-            flex-direction: column;
-            height: 100vh; /* เต็มจอแนวตั้ง */
-            width: 100%;
+            min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
-        #terminal {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            /* ปรับขนาดฟอนต์พื้นฐาน */
-            font-size: 14px;
-            line-height: 1.5;
-        }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
-        /* Floating Button (ขวาล่าง) */
-        #floating-button-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
+        /* ปุ่ม Run */
         .run-button {
             font-family: 'Fira Code', monospace;
             background-color: #ffc0cb;
             color: #1a1a1a;
-            padding: 12px 24px; /* ปุ่มใหญ่ขึ้นนิดนึงให้กดง่ายในมือถือ */
-            border-radius: 50px; /* กลมมน */
+            padding: 12px 24px; 
+            border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 175, 200, 0.6);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(255, 175, 200, 0.5);
             border: 2px solid #fff;
         }
-
-        .terminal-input {
-            background: #fff;
-            border: 1px solid #e63946;
-            color: #333333;
-            border-radius: 8px;
-            padding: 10px;
-            outline: none;
-            width: 200px; /* ความกว้าง Input */
-            margin-bottom: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .run-button:hover {
+            background-color: #ffafc2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 175, 200, 0.7);
         }
 
-        /* --- 3. Mobile Optimizations (หัวใจสำคัญ) --- */
-        
-        /* Gallery Images */
-        .gallery-image-wrapper {
+        /* Floating Button Container (ขวาล่าง) */
+        #floating-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        /* --- 3. CSS Loading Animations --- */
+        .loader-text {
+            font-family: "Kanit", sans-serif;
+            background-image: linear-gradient(90deg, #ff0037 0%, #ff2c7d 10%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        .loader-text::after, .loader-text::before {
+            content: "";
+            display: block;
             width: 100%;
-            max-width: 100%;
+            height: 2px;
+            background-color: #ff2c7d;
+            box-shadow: 0 0 10px rgba(230, 169, 169, 0.316);
+            margin: 1rem auto;
+        }
+        
+        /* --- 4. CSS สำหรับ Gallery --- */
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .gallery-image-wrapper {
+            position: relative;
+            width: 90%;
+            min-height: 300px; 
             background-color: #fff;
             border-radius: 8px;
             border: 2px solid #e63946;
-            overflow: hidden;
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             background: #000;
         }
         .gallery-image {
-            max-width: 100%;
-            max-height: 350px; /* จำกัดความสูงไม่ให้ดันจอ */
-            object-fit: contain;
-        }
-        .gallery-controls {
-            margin-top: 10px;
-            gap: 10px;
-        }
-        .gallery-button {
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-
-        /* ASCII Art Responsive */
-        .ascii-art-text {
-            color: #e63946;
-            white-space: pre;
-            font-family: 'Fira Code', monospace;
-            /* Trick: ย่อขนาดฟอนต์ ASCII ในมือถือ */
-            font-size: 9px !important; 
-            line-height: 9px !important;
-            /* จัดกึ่งกลาง */
-            display: flex;
-            justify-content: center;
             width: 100%;
-            overflow-x: hidden;
+            height: 100%;
+            max-height: 450px;
+            object-fit: contain; 
+            display: block;
+            opacity: 0; 
+            transition: opacity 0.3s ease;
         }
-        
-        /* Final Card Responsive */
-        .card {
-            width: 90%; /* เกือบเต็มจอ */
-            max-width: 330px;
-            padding: 1.5rem;
-            background: #212121;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            margin: 0 auto;
-        }
-        .card-image {
-            height: 200px;
-            background: #333;
-            border-radius: 15px;
+        .gallery-loader {
+            position: absolute;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: rgba(255,255,255,0.9);
+            color: #e63946;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.2rem;
+            z-index: 10;
+            flex-direction: column; 
+            gap: 15px;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        .gallery-button {
+            background: #fff;
+            color: #e63946;
+            border: 1px solid #e63946;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+        }
+        .gallery-button:disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+        .gallery-counter { color: #e63946; font-size: 0.9rem; }
+
+        /* --- Fancy Carousel Loader --- */
+        .loader-fancy { display: flex; position: relative; justify-items: center; align-items: center; gap: 1rem; height: 55px; width: 200px; overflow: hidden; }
+        .loader-fancy .container { width: 100%; display: flex; flex-direction: column; height: 200px; position: relative; align-items: center; }
+        .carousel { display: flex; gap: 1rem; flex-direction: column; position: absolute; width: 100%; transform-origin: center; animation-delay: 2s; }
+        .loader-fancy .container:nth-child(3) { justify-content: flex-start; justify-items: flex-start; animation: scroll-up 4s infinite ease-in-out; animation-delay: 3s; }
+        .loader-fancy .container:nth-child(2) { justify-content: flex-end; justify-items: flex-end; animation: scroll-down 4s infinite ease-in-out; animation-delay: 3s; }
+        .loader-fancy .container:nth-child(1) { justify-content: flex-end; justify-items: flex-end; animation: scroll-down 3s infinite ease-in-out; animation-delay: 3s; }
+        .love { background: #ff2c7d; display: flex; width: 30px; height: 30px; position: relative; align-items: center; justify-content: center; left: 8px; margin: 0.8rem 4px; transform: rotate(45deg); animation-delay: 2s; }
+        .love::before, .love::after { content: ''; position: absolute; width: 30px; height: 30px; border-radius: 50%; background: #ff2c7d; }
+        .love::before { left: -16px; } .love::after { top: -16px; }
+        .death { display: flex; width: 100%; height: 55px; position: relative; align-items: center; justify-content: center; animation: rotation 3s infinite ease-in-out; animation-delay: 1s; }
+        .death:after { content: ''; height: 63px; position: absolute; border-left: 12px solid #e63946; transform: rotate(45deg); border-radius: 8px; top: -4px; }
+        .death:before { content: ''; height: 60px; position: absolute; border-left: 12px solid #e63946; transform: rotate(-45deg); }
+        .robots { display: flex; width: 100%; height: 55px; justify-content: space-between; background-color: #e63946; border-radius: 0 8px 8px; padding: 8px; animation-delay: 5s; }
+        .robots::after, .robots::before { content: ''; width: 12px; height: 12px; top: 0; left: 0; background-color: #ffffff; border-radius: 50%; animation-delay: 2s; animation: blink 0.5s 2 forwards; }
+        @keyframes scroll-up { 0% { transform: translateY(0); filter: blur(0); } 30% { transform: translateY(-150%); filter: blur(10px); } 60% { transform: translateY(0); filter: blur(0px); } }
+        @keyframes scroll-down { 0% { transform: translateY(0); filter: blur(0); } 30% { transform: translateY(150%); filter: blur(10px); } 60% { transform: translateY(0); filter: blur(0px); } }
+        @keyframes rotation { 20%, 100% { transform: rotate(180deg); } }
+        @keyframes blink { 0% { height: 0; } 20% { height: 12px; } 100% { height: 12px; } }
+
+        /* --- 5. Final Loading Animation --- */
+        .heartbeatloader-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #e63946; padding-top: 50px; }
+        .simple-heart-loader { position: relative; width: 40px; height: 60px; margin: 50px auto 0; animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1); }
+        .simple-heart-loader:before, .simple-heart-loader:after { content: ""; background: #e63946; width: 40px; height: 60px; border-radius: 50px 50px 0 0; position: absolute; left: 0; bottom: 0; transform: rotate(45deg); transform-origin: 50% 100%; box-shadow: 5px 4px 5px rgba(0, 0, 0, 0.1) inset; }
+        .simple-heart-loader:after { transform: rotate(-45deg); }
+        @keyframes heartBeat { 0% { transform: scale(0.95); } 5% { transform: scale(1.1); } 39% { transform: scale(0.85); } 45% { transform: scale(1); } 60% { transform: scale(0.95); } 100% { transform: scale(0.9); } }
+
+        /* --- 6. Final Card --- */
+        .card-container { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 20px; }
+        .card { padding: 20px; width: 330px; min-height: 370px; border-radius: 20px; background: #212121; box-shadow: 5px 5px 8px #1b1b1b, -5px -5px 8px #272727; transition: 0.4s; margin: 0 auto; }
+        .card:hover { translate: 0 -10px; }
+        .card-title { font-size: 18px; font-weight: 600; color: #ffc0cb; margin: 15px 0 0 0; text-align: center; }
+        .card-image { min-height: 170px; background-color: #313131; border-radius: 15px; background: #313131; box-shadow: inset 5px 5px 3px #2f2f2f, inset -5px -5px 3px #333333; display: flex; align-items: center; justify-content: center; }
+        .card-body { margin: 13px 0 0 0; color: rgb(184, 184, 184); font-size: 15px; text-align: center; white-space: pre-wrap; }
+        .footer { margin: 28px 0 0 0; font-size: 13px; color: #b3b3b3; text-align: right; }
+        .by-name { font-weight: 700; color: #ffc0cb; }
+
+        /* --- Mobile Fixes --- */
+        @media (max-width: 640px) {
+            .loading { display: none; } /* ซ่อนชีพจร */
+            
+            /* ASCII Art Resize */
+            .text-pink-600.whitespace-pre {
+                font-size: 0.55rem !important; 
+                line-height: 0.8rem !important;
+            }
+
+            .gallery-image { max-height: 300px; }
+            #floating-button-container { bottom: 20px; right: 20px; }
+            .card { width: 90%; padding: 15px; }
+            .loader-fancy { transform: scale(0.8); }
+        }
+        
+        /* --- Animation for Modal Shake --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.3s ease-in-out;
         }
 
-        /* Fancy Loader Scale down for mobile */
-        .loader-fancy { transform: scale(0.8); }
     </style>
 </head>
-<body>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <div id="fancyLoaderTemplate" class="hidden">
+        <div class="loader-fancy">
+            <div class="container"><div class="carousel"><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div></div></div>
+            <div class="container"><div class="carousel"><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div></div></div>
+            <div class="container"><div class="carousel"><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div></div></div>
+        </div>
+    </div>
+    
+    <div id="security-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center border-4 border-pink-200 transform transition-all scale-100">
+            <div class="mb-4 text-5xl">🔐</div>
+            <h3 class="text-2xl font-bold text-pink-500 mb-2 font-kanit">Security Check</h3>
+            <p id="modal-prompt" class="text-gray-600 mb-6 font-kanit"></p>
+            <input type="text" id="modal-input" class="w-full border-2 border-pink-200 rounded-lg px-4 py-2 text-center focus:outline-none focus:border-pink-400 font-kanit mb-2 text-black" placeholder="กรอกรหัสที่นี่...">
+            <p id="modal-error" class="text-red-500 text-sm mb-4 hidden font-kanit">รหัสผิด! ลองใหม่อีกครั้งนะ</p>
+            <button id="modal-submit" class="w-full bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 rounded-lg transition-colors font-kanit">
+                ยืนยัน
+            </button>
+        </div>
+    </div>
 
     <div id="entry-screen">
+        <div class="loading">
+            <svg height="48px" width="64px">
+                <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+                <polyline id="front" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+            </svg>
+        </div>
+        
         <div class="heart" id="heart-button">
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
@@ -223,6 +346,13 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
         </div>
         
+        <div class="loading" id="loading-right">
+            <svg height="48px" width="64px">
+                <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+                <polyline id="front" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+            </svg>
+        </div>
+
         <div class="cat-loader-wrapper">
             <div class="catContainer">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 733 673" class="catbody">
@@ -265,6 +395,14 @@
         const inputArea = document.getElementById('floating-button-container');
         const bgMusic = document.getElementById('bg-music');
         
+        // Modal Elements
+        const modal = document.getElementById('security-modal');
+        const modalInput = document.getElementById('modal-input');
+        const modalSubmit = document.getElementById('modal-submit');
+        const modalPrompt = document.getElementById('modal-prompt');
+        const modalError = document.getElementById('modal-error');
+        const modalContent = document.getElementById('modal-content');
+
         let currentStep = 0;
         let audioReady = false; 
         let audioSetupPromise = null; 
@@ -358,7 +496,7 @@
         // --- Display Functions ---
         function logToTerminal(text, type = 'command') {
             const line = document.createElement('div');
-            line.className = 'mb-2 break-words'; // Standard margin
+            line.className = 'mb-2 break-words'; 
 
             if (type === 'command') {
                 line.innerHTML = `<span class="text-pink-600 mr-2">&gt;</span>${text}`;
@@ -371,7 +509,6 @@
             } else if (type === 'loader') {
                 line.innerHTML = text;
             } else if (type === 'ascii') {
-                // สำคัญ: คลาสนี้ทำให้ ASCII Art เล็กลงในมือถือ
                 line.className += ' ascii-art-text'; 
                 line.innerText = text;
             } else if (type === 'gallery') {
@@ -461,7 +598,12 @@
         function runCurrentStep() {
             const step = storySteps[currentStep];
             if (!step) return;
-            logToTerminal(step.buttonText, 'command');
+            
+            // If input type, don't log command yet, wait for modal
+            if (step.type !== 'input') {
+                logToTerminal(step.buttonText, 'command');
+            }
+
             executeStepAction(step, () => {
                 currentStep++;
                 if (currentStep < storySteps.length) {
@@ -531,7 +673,7 @@
                     const nextButton = galleryContainer.querySelector('#nextButton');
                     const counterElement = galleryContainer.querySelector('#imageCounter');
                     
-                    // Style buttons inline for simplicity
+                    // Style buttons inline
                     const btnStyle = "background:white; color:#e63946; border:1px solid #e63946; padding:5px 10px; border-radius:5px; font-family:monospace;";
                     prevButton.style.cssText = btnStyle;
                     nextButton.style.cssText = btnStyle;
@@ -568,40 +710,39 @@
                 drawAsciiArt(step.asciiArt, onComplete);
             } 
             else if (step.type === 'input') {
-                const line = logToTerminal("", 'result');
-                typeWriter(line, step.promptText, () => {
-                    const inputField = document.createElement('input');
-                    inputField.type = 'text';
-                    inputField.className = 'terminal-input';
-                    
-                    const submitButton = document.createElement('button');
-                    submitButton.innerText = 'ส่งคำตอบ';
-                    submitButton.className = 'run-button ml-2';
-                    
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'flex flex-col items-end gap-2';
-                    wrapper.appendChild(inputField);
-                    wrapper.appendChild(submitButton);
+                // Show Modal Logic
+                modalPrompt.innerText = step.promptText;
+                modalInput.value = '';
+                modalError.classList.add('hidden');
+                modal.classList.remove('hidden');
+                setTimeout(() => modalInput.focus(), 100);
 
-                    inputArea.innerHTML = '';
-                    inputArea.appendChild(wrapper);
-                    inputArea.classList.remove('hidden');
-                    inputField.focus();
+                const handleModalSubmit = () => {
+                    const answer = modalInput.value.trim();
+                    if (answer === step.correctAnswer) {
+                        // Correct
+                        playSound(successSound, 'G5');
+                        modal.classList.add('hidden');
+                        logToTerminal(step.buttonText, 'command'); // Log the action now
+                        logToTerminal(`รหัสถูกต้อง: ${answer}`, 'result');
+                        modalSubmit.removeEventListener('click', handleModalSubmit); // Clean up
+                        onComplete();
+                    } else {
+                        // Wrong
+                        playSound(errorSound, 'C3', '4n');
+                        modalError.classList.remove('hidden');
+                        modalContent.classList.add('shake');
+                        setTimeout(() => modalContent.classList.remove('shake'), 500);
+                        modalInput.value = '';
+                        modalInput.focus();
+                    }
+                };
 
-                    const checkAnswer = () => {
-                        const answer = inputField.value;
-                        if (answer.trim() === step.correctAnswer) {
-                            logToTerminal(`รหัสถูกต้อง: ${answer}`, 'command');
-                            inputArea.classList.add('hidden');
-                            onComplete();
-                        } else {
-                            logToTerminal(`รหัสผิดพลาด! '${answer}' ไม่ถูกต้อง`, 'error');
-                            inputField.value = '';
-                            inputField.focus();
-                        }
-                    };
-                    submitButton.onclick = checkAnswer;
-                });
+                modalSubmit.onclick = handleModalSubmit;
+                // Handle Enter key in modal
+                modalInput.onkeydown = (e) => {
+                    if (e.key === 'Enter') handleModalSubmit();
+                };
             } 
             else if (step.type === 'final') {
                 // Fancy Loader for Final Step
@@ -628,7 +769,7 @@
                             <div class="card-image bg-pink-600/30 flex items-center justify-center">
                                 <span class="text-6xl animate-pulse">🎁</span>
                             </div>
-                            <p class="card-title text-[#ffc0cb] mt-4">New Year's Present</p>
+                            <p class="card-title text-[#ffc0cb] mt-4">New Year's Present for My Love</p>
                             <p class="card-body text-gray-300">
                                 Happy New Year 2026!<br>
                                 ถึงตัวจะไกล... แต่ใจไม่เคยห่างนะ<br>
