@@ -2,15 +2,19 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You 💖</title>
     
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 2. Fonts (Kanit for Thai, Fira Code for code) -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
+    <!-- 3. Confetti (พลุ) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <!-- 4. Tone.js (เสียง) - เอา Tone.js กลับมา -->
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
     
     <style>
@@ -20,12 +24,20 @@
             min-height: 100vh;
             /* FIX Mobile: ป้องกันการ scroll แนวนอนที่ body */
             overflow-x: hidden;
-            /* ป้องกันการแตะซ้ำเพื่อซูมในมือถือ */
-            touch-action: manipulation; 
         }
         .code-font { font-family: 'Fira Code', monospace; }
-        .font-kanit { font-family: 'Kanit', sans-serif; }
 
+        /* --- Global Music Player Position --- */
+        #music-player-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            opacity: 0; /* ซ่อนไว้ก่อน */
+            transition: opacity 0.5s ease-out;
+            transform: scale(0.9);
+        }
+        
         /* --- 1. CSS หน้าแรก (Pixel Heart) --- */
         #entry-screen {
             background-color: #fce4ec;
@@ -40,6 +52,7 @@
             inset: 0;
             z-index: 50;
             transition: opacity 0.5s ease-out; 
+            /* FIX Mobile: ป้องกันการ scroll แนวนอน */
             overflow: hidden;
         }
         
@@ -54,28 +67,78 @@
             cursor: pointer;
             flex-shrink: 0; 
         }
-        /* Mobile adjustment for heart */
-        @media (max-width: 640px) {
-            .heart {
-                transform: scale(0.8);
+        .pixel {
+            width: 20px;
+            height: 20px;
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        .pixel.pink {
+            background: #e63946;
+            animation: pinkPulse 2.5s infinite ease-in-out;
+        }
+        .pixel.soft-pink {
+            background: #f1a1b4;
+            animation: softPinkPulse 2.2s infinite ease-in-out;
+        }
+        .pixel.white {
+            background: #ffeaea;
+            animation: whitePulse 2.8s infinite ease-in-out;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        @keyframes pinkPulse {
+            0%, 100% {
+                background: #ff6b81; transform: scale(1); box-shadow: 0 0 0 rgba(230, 57, 70, 0);
+            }
+            50% {
+                background: #e63946; transform: scale(1.05); box-shadow: 0 0 10px rgba(230, 57, 70, 0.6);
+            }
+        }
+        @keyframes softPinkPulse {
+            0%, 100% {
+                background: #e63946; transform: scale(1); box-shadow: 0 0 0 rgba(241, 161, 180, 0);
+            }
+            50% {
+                background: #f1a1b4; transform: scale(1.05); box-shadow: 0 0 8px rgba(241, 161, 180, 0.6);
+            }
+        }
+        @keyframes whitePulse {
+            0%, 100% {
+                background: #ffe3e3; transform: scale(1); box-shadow: 0 0 0 rgba(255, 234, 234, 0);
+            }
+            50% {
+                background: #ffeaea; transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 234, 234, 0.8);
             }
         }
 
-        .pixel { width: 100%; height: 100%; transition: all 0.3s ease; transform: scale(1); }
-        .pixel.pink { background: #e63946; animation: pinkPulse 2.5s infinite ease-in-out; }
-        .pixel.soft-pink { background: #f1a1b4; animation: softPinkPulse 2.2s infinite ease-in-out; }
-        .pixel.white { background: #ffeaea; animation: whitePulse 2.8s infinite ease-in-out; }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-        @keyframes pinkPulse { 0%, 100% { background: #ff6b81; transform: scale(1); box-shadow: 0 0 0 rgba(230, 57, 70, 0); } 50% { background: #e63946; transform: scale(1.05); box-shadow: 0 0 10px rgba(230, 57, 70, 0.6); } }
-        @keyframes softPinkPulse { 0%, 100% { background: #e63946; transform: scale(1); box-shadow: 0 0 0 rgba(241, 161, 180, 0); } 50% { background: #f1a1b4; transform: scale(1.05); box-shadow: 0 0 8px rgba(241, 161, 180, 0.6); } }
-        @keyframes whitePulse { 0%, 100% { background: #ffe3e3; transform: scale(1); box-shadow: 0 0 0 rgba(255, 234, 234, 0); } 50% { background: #ffeaea; transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 234, 234, 0.8); } }
-
         /* Loading SVG (Uiverse.io by RaspberryBee) */
-        .loading { flex-shrink: 0; }
-        .loading svg polyline { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-        .loading svg polyline#back { fill: none; stroke: #ff99aa; }
-        .loading svg polyline#front { fill: none; stroke: #e63946; stroke-dasharray: 48, 144; stroke-dashoffset: 192; animation: dash_682 1.4s linear infinite; }
-        @keyframes dash_682 { 72.5% { opacity: 0; } to { stroke-dashoffset: 0; } }
+        .loading {
+             flex-shrink: 0; 
+        }
+        .loading svg polyline {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .loading svg polyline#back {
+            fill: none;
+            stroke: #ff99aa; 
+        }
+        .loading svg polyline#front {
+            fill: none;
+            stroke: #e63946;
+            stroke-dasharray: 48, 144;
+            stroke-dashoffset: 192;
+            animation: dash_682 1.4s linear infinite;
+        }
+        @keyframes dash_682 {
+            72.5% { opacity: 0; }
+            to { stroke-dashoffset: 0; }
+        }
         
         /* Cat Loader CSS */
         .cat-loader-wrapper {
@@ -86,62 +149,130 @@
             justify-content: center;
             align-items: center;
             position: absolute;
+            /* FIX Mobile: ย้ายแมวขึ้นมา ไม่ให้จมขอบ */
             bottom: 8vh; 
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
         }
-        .catContainer { width: 100%; height: fit-content; display: flex; align-items: center; justify-content: center; position: relative; transform: scale(0.8); }
-        .catbody { width: 80px; }
-        .catbody path { fill: #ff6b81 !important; }
-        .tail { position: absolute; width: 17px; top: 50%; animation: tail 0.5s ease-in infinite alternate-reverse; transform-origin: top; }
-        .tail path { fill: #e63946 !important; }
-        @keyframes tail { 0% { transform: rotateZ(60deg); } 50% { transform: rotateZ(0deg); } 100% { transform: rotateZ(-20deg); } }
-        .text { display: flex; flex-direction: column; width: 50px; position: absolute; margin: 0px 0px 100px 120px; }
-        .zzz, .bigzzz { color: #e63946; font-weight: 700; font-size: 15px; animation: zzz 2s linear infinite; }
-        .bigzzz { font-size: 25px; margin-left: 10px; animation: zzz 2.3s linear infinite; }
-        @keyframes zzz { 0% { color: transparent; } 50% { color: #e63946; } 100% { color: transparent; } }
+        .catContainer {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .catbody {
+            width: 80px;
+        }
+        .catbody path {
+            fill: #ff6b81 !important;
+        }
+        .tail {
+            position: absolute;
+            width: 17px;
+            top: 50%;
+            animation: tail 0.5s ease-in infinite alternate-reverse;
+            transform-origin: top;
+        }
+        .tail path {
+            fill: #e63946 !important;
+        }
+        @keyframes tail {
+            0% { transform: rotateZ(60deg); }
+            50% { transform: rotateZ(0deg); }
+            100% { transform: rotateZ(-20deg); }
+        }
+        .text {
+            display: flex;
+            flex-direction: column;
+            width: 50px;
+            position: absolute;
+            margin: 0px 0px 100px 120px;
+        }
+        .zzz, .bigzzz {
+            color: #e63946;
+            font-weight: 700;
+            font-size: 15px;
+            animation: zzz 2s linear infinite;
+        }
+        .bigzzz {
+            font-size: 25px;
+            margin-left: 10px;
+            animation: zzz 2.3s linear infinite;
+        }
+        @keyframes zzz {
+            0% { color: transparent; }
+            50% { color: #e63946; }
+            100% { color: transparent; }
+        }
 
         /* --- 2. CSS หน้า Terminal --- */
         #terminal-screen {
             background-color: #fce4ec;
             color: #333333;
             min-height: 100vh;
+            /* FIX Mobile: ป้องกันการ scroll แนวนอน */
             max-width: 100%;
             overflow-x: hidden;
         }
         
-        .cursor-blink { animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
 
         /* ปุ่ม Run */
         .run-button {
             font-family: 'Fira Code', monospace;
             background-color: #ffc0cb;
             color: #1a1a1a;
-            padding: 12px 24px; 
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 10px rgba(255, 175, 200, 0.5);
-            border: 2px solid #fff;
         }
         .run-button:hover {
             background-color: #ffafc2;
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(255, 175, 200, 0.7);
         }
+        .run-button:disabled {
+            background-color: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
-        /* Floating Button Container (ขวาล่าง) */
+        /* ช่อง Input */
+        .terminal-input {
+            background: #fff;
+            border: 1px solid #aaa;
+            color: #333333;
+            border-radius: 4px;
+            padding: 8px 12px;
+            outline: none;
+        }
+        .terminal-input:focus {
+            border-color: #e63946;
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
+        }
+
+        /* --- NEW: Floating Button Container (ย้ายมามุมขวาล่าง) --- */
         #floating-button-container {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 30px; /* ไม่ชิดขอบเกินไป */
+            right: 30px; /* ไม่ชิดขอบเกินไป */
             z-index: 90;
             display: flex;
+            align-items: center;
+            justify-content: flex-end; /* ชิดขวา */
             flex-direction: column;
-            align-items: flex-end;
             gap: 10px;
         }
 
@@ -167,7 +298,24 @@
             box-shadow: 0 0 10px rgba(230, 169, 169, 0.316);
             margin: 1rem auto;
         }
-        
+        .Particle_heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #ff2c7d;
+            opacity: 0;
+            animation: floatHeart 5s linear infinite;
+        }
+        .Particle_heart:nth-child(1) { left: 10%; animation-delay: 0.5s; }
+        .Particle_heart:nth-child(2) { left: 30%; animation-delay: 2.5s; }
+        .Particle_heart:nth-child(3) { left: 50%; animation-delay: 1.5s; }
+        .Particle_heart:nth-child(4) { left: 70%; animation-delay: 1s; }
+        @keyframes floatHeart {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { transform: translateY(-100px) translateX(30px); opacity: 1; }
+            100% { transform: translateY(-150px) translateX(60px); opacity: 0; }
+        }
+
         /* --- 4. CSS สำหรับ Gallery --- */
         .gallery-container {
             display: flex;
@@ -184,9 +332,6 @@
             border-radius: 8px;
             border: 2px solid #e63946;
             overflow: hidden; 
-            display: flex;
-            justify-content: center;
-            background: #000;
         }
         .gallery-image {
             width: 100%;
@@ -211,120 +356,504 @@
             flex-direction: column; 
             gap: 15px;
         }
-        
-        .gallery-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-        }
-        .gallery-button {
-            background: #fff;
-            color: #e63946;
-            border: 1px solid #e63946;
-            border-radius: 5px;
-            padding: 8px 16px;
-            font-weight: 600;
-            font-family: 'Fira Code', monospace;
-        }
-        .gallery-button:disabled {
-            background: #f0f0f0;
-            color: #aaa;
-            border-color: #ccc;
-            cursor: not-allowed;
-        }
-        .gallery-counter { color: #e63946; font-size: 0.9rem; }
 
         /* --- Fancy Carousel Loader --- */
-        .loader-fancy { display: flex; position: relative; justify-items: center; align-items: center; gap: 1rem; height: 55px; width: 200px; overflow: hidden; }
-        .loader-fancy .container { width: 100%; display: flex; flex-direction: column; height: 200px; position: relative; align-items: center; }
-        .carousel { display: flex; gap: 1rem; flex-direction: column; position: absolute; width: 100%; transform-origin: center; animation-delay: 2s; }
-        .loader-fancy .container:nth-child(3) { justify-content: flex-start; justify-items: flex-start; animation: scroll-up 4s infinite ease-in-out; animation-delay: 3s; }
-        .loader-fancy .container:nth-child(2) { justify-content: flex-end; justify-items: flex-end; animation: scroll-down 4s infinite ease-in-out; animation-delay: 3s; }
-        .loader-fancy .container:nth-child(1) { justify-content: flex-end; justify-items: flex-end; animation: scroll-down 3s infinite ease-in-out; animation-delay: 3s; }
-        .love { background: #ff2c7d; display: flex; width: 30px; height: 30px; position: relative; align-items: center; justify-content: center; left: 8px; margin: 0.8rem 4px; transform: rotate(45deg); animation-delay: 2s; }
-        .love::before, .love::after { content: ''; position: absolute; width: 30px; height: 30px; border-radius: 50%; background: #ff2c7d; }
-        .love::before { left: -16px; } .love::after { top: -16px; }
-        .death { display: flex; width: 100%; height: 55px; position: relative; align-items: center; justify-content: center; animation: rotation 3s infinite ease-in-out; animation-delay: 1s; }
-        .death:after { content: ''; height: 63px; position: absolute; border-left: 12px solid #e63946; transform: rotate(45deg); border-radius: 8px; top: -4px; }
-        .death:before { content: ''; height: 60px; position: absolute; border-left: 12px solid #e63946; transform: rotate(-45deg); }
-        .robots { display: flex; width: 100%; height: 55px; justify-content: space-between; background-color: #e63946; border-radius: 0 8px 8px; padding: 8px; animation-delay: 5s; }
-        .robots::after, .robots::before { content: ''; width: 12px; height: 12px; top: 0; left: 0; background-color: #ffffff; border-radius: 50%; animation-delay: 2s; animation: blink 0.5s 2 forwards; }
-        @keyframes scroll-up { 0% { transform: translateY(0); filter: blur(0); } 30% { transform: translateY(-150%); filter: blur(10px); } 60% { transform: translateY(0); filter: blur(0px); } }
-        @keyframes scroll-down { 0% { transform: translateY(0); filter: blur(0); } 30% { transform: translateY(150%); filter: blur(10px); } 60% { transform: translateY(0); filter: blur(0px); } }
-        @keyframes rotation { 20%, 100% { transform: rotate(180deg); } }
-        @keyframes blink { 0% { height: 0; } 20% { height: 12px; } 100% { height: 12px; } }
+        .loader-fancy {
+            display: flex;
+            position: relative;
+            justify-items: center;
+            align-items: center;
+            gap: 1rem;
+            height: 55px;
+            width: 200px;
+            overflow: hidden;
+        }
+        .loader-fancy .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            height: 200px;
+            position: relative;
+            align-items: center;
+        }
+        .carousel {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+            position: absolute;
+            width: 100%;
+            transform-origin: center;
+            animation-delay: 2s;
+        }
+        .loader-fancy .container:nth-child(3) {
+            justify-content: flex-start;
+            justify-items: flex-start;
+            animation: scroll-up 4s infinite ease-in-out;
+            animation-delay: 3s;
+        }
+        .loader-fancy .container:nth-child(2) {
+            justify-content: flex-end;
+            justify-items: flex-end;
+            animation: scroll-down 4s infinite ease-in-out;
+            animation-delay: 3s;
+        }
+        .loader-fancy .container:nth-child(1) {
+            justify-content: flex-end;
+            justify-items: flex-end;
+            animation: scroll-down 3s infinite ease-in-out;
+            animation-delay: 3s;
+        }
+        .love {
+            background: #ff2c7d;
+            display: flex;
+            width: 30px;
+            height: 30px;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            left: 8px;
+            margin: 0.8rem 4px;
+            transform: rotate(45deg);
+            animation-delay: 2s;
+        }
+        .love::before, .love::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff2c7d;
+        }
+        .love::before { left: -16px; }
+        .love::after { top: -16px; }
+        .death {
+            display: flex;
+            width: 100%;
+            height: 55px;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            animation: rotation 3s infinite ease-in-out;
+            animation-delay: 1s;
+        }
+        .death:after {
+            content: '';
+            height: 63px;
+            position: absolute;
+            border-left: 12px solid #e63946;
+            transform: rotate(45deg);
+            border-radius: 8px;
+            top: -4px;
+        }
+        .death:before {
+            content: '';
+            height: 60px;
+            position: absolute;
+            border-left: 12px solid #e63946;
+            transform: rotate(-45deg);
+        }
+        .robots {
+            display: flex;
+            width: 100%;
+            height: 55px;
+            justify-content: space-between;
+            background-color: #e63946;
+            border-radius: 0 8px 8px;
+            padding: 8px;
+            animation-delay: 5s;
+        }
+        .robots::after, .robots::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            top: 0;
+            left: 0;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation-delay: 2s;
+            animation: blink 0.5s 2 forwards;
+        }
+        @keyframes scroll-up {
+            0% { transform: translateY(0); filter: blur(0); }
+            30% { transform: translateY(-150%); filter: blur(10px); }
+            60% { transform: translateY(0); filter: blur(0px); }
+        }
+        @keyframes scroll-down {
+            0% { transform: translateY(0); filter: blur(0); }
+            30% { transform: translateY(150%); filter: blur(10px); }
+            60% { transform: translateY(0); filter: blur(0px); }
+        }
+        @keyframes rotation {
+            20%, 100% { transform: rotate(180deg); }
+        }
+        @keyframes blink {
+            0% { height: 0; }
+            20% { height: 12px; }
+            100% { height: 12px; }
+        }
 
         /* --- 5. Final Loading Animation --- */
-        .heartbeatloader-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #e63946; padding-top: 50px; }
-        .simple-heart-loader { position: relative; width: 40px; height: 60px; margin: 50px auto 0; animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1); }
-        .simple-heart-loader:before, .simple-heart-loader:after { content: ""; background: #e63946; width: 40px; height: 60px; border-radius: 50px 50px 0 0; position: absolute; left: 0; bottom: 0; transform: rotate(45deg); transform-origin: 50% 100%; box-shadow: 5px 4px 5px rgba(0, 0, 0, 0.1) inset; }
-        .simple-heart-loader:after { transform: rotate(-45deg); }
-        @keyframes heartBeat { 0% { transform: scale(0.95); } 5% { transform: scale(1.1); } 39% { transform: scale(0.85); } 45% { transform: scale(1); } 60% { transform: scale(0.95); } 100% { transform: scale(0.9); } }
+        .heartbeatloader-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e63946;
+            padding-top: 50px;
+        }
+        .simple-heart-loader {
+            position: relative;
+            width: 40px;
+            height: 60px;
+            margin: 50px auto 0;
+            animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        .simple-heart-loader:before,
+        .simple-heart-loader:after {
+            content: "";
+            background: #e63946;
+            width: 40px;
+            height: 60px;
+            border-radius: 50px 50px 0 0;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            transform: rotate(45deg);
+            transform-origin: 50% 100%; 
+            box-shadow: 5px 4px 5px rgba(0, 0, 0, 0.1) inset; 
+        }
+        .simple-heart-loader:after {
+            transform: rotate(-45deg);
+        }
+        @keyframes heartBeat {
+             0% { transform: scale(0.95); }
+             5% { transform: scale(1.1); }
+             39% { transform: scale(0.85); }
+             45% { transform: scale(1); }
+             60% { transform: scale(0.95); }
+             100% { transform: scale(0.9); }
+        }
 
         /* --- 6. Final Card --- */
-        .card-container { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 20px; }
-        .card { padding: 20px; width: 330px; min-height: 370px; border-radius: 20px; background: #212121; box-shadow: 5px 5px 8px #1b1b1b, -5px -5px 8px #272727; transition: 0.4s; margin: 0 auto; }
-        .card:hover { translate: 0 -10px; }
-        .card-title { font-size: 18px; font-weight: 600; color: #ffc0cb; margin: 15px 0 0 0; text-align: center; }
-        .card-image { min-height: 170px; background-color: #313131; border-radius: 15px; background: #313131; box-shadow: inset 5px 5px 3px #2f2f2f, inset -5px -5px 3px #333333; display: flex; align-items: center; justify-content: center; }
-        .card-body { margin: 13px 0 0 0; color: rgb(184, 184, 184); font-size: 15px; text-align: center; white-space: pre-wrap; }
-        .footer { margin: 28px 0 0 0; font-size: 13px; color: #b3b3b3; text-align: right; }
-        .by-name { font-weight: 700; color: #ffc0cb; }
-
-        /* --- Mobile Fixes --- */
-        @media (max-width: 640px) {
-            .loading { display: none; } /* ซ่อนชีพจร */
-            
-            /* ASCII Art Resize */
-            .text-pink-600.whitespace-pre {
-                font-size: 0.55rem !important; 
-                line-height: 0.8rem !important;
-            }
-
-            .gallery-image { max-height: 300px; }
-            #floating-button-container { bottom: 20px; right: 20px; }
-            .card { width: 90%; padding: 15px; }
-            .loader-fancy { transform: scale(0.8); }
+        .card-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+        .card {
+            padding: 20px;
+            width: 330px;
+            min-height: 370px;
+            border-radius: 20px;
+            background: #212121;
+            box-shadow: 5px 5px 8px #1b1b1b, -5px -5px 8px #272727; 
+            transition: 0.4s;
+        }
+        .card:hover {
+            translate: 0 -10px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffc0cb;
+            margin: 15px 0 0 0;
+            text-align: center;
+        }
+        .card-image {
+            min-height: 170px;
+            background-color: #313131;
+            border-radius: 15px;
+            background: #313131;
+            box-shadow: inset 5px 5px 3px #2f2f2f, inset -5px -5px 3px #333333;
+        }
+        .card-body {
+            margin: 13px 0 0 0;
+            color: rgb(184, 184, 184);
+            font-size: 15px;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+        .footer {
+            margin: 28px 0 0 0;
+            font-size: 13px;
+            color: #b3b3b3;
+            text-align: right;
+        }
+        .by-name {
+            font-weight: 700;
+            color: #ffc0cb;
         }
         
-        /* --- Animation for Modal Shake --- */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        /* --- Music Player CSS --- */
+        .player-card {
+            height: 10rem;
+            width: 18rem;
+            transition: none;
+            background-color: #fff !important;
+            box-shadow: 5px 5px 8px #ff99aa !important;
         }
-        .shake {
-            animation: shake 0.3s ease-in-out;
+        .player-disc-area {
+            height: 5rem;
+        }
+        .player-disc-small {
+            opacity: 1;
+            transition: none;
+            top: -1.5rem;
+            left: -1rem;
+        }
+        .player-disc-small .disk-svg {
+            animation: spin 3s linear infinite; 
+        }
+        .player-text-area {
+            margin-left: -0.75rem;
+            overflow: hidden;
+            text-wrap: nowrap;
+        }
+        .player-range-bar {
+            margin-top: 0;
+            background-color: #f1a1b4 !important;
+        }
+        .player-range-time {
+            display: inline-block;
+        }
+        .player-range-input {
+            width: 100%;
+        }
+        .player-range-input::-webkit-slider-thumb {
+            border-color: #e63946 !important;
+            background-color: #ffc0cb !important;
+        }
+        .player-controls-hidden {
+            width: 3rem;
+        }
+        .disk-svg {
+            border-color: #ff6b81 !important;
+        }
+        .disk-svg path[fill="purple"], .disk-svg path[fill="mediumpurple"], .disk-svg path[fill="rebeccapurple"] {
+            fill: #e63946 !important;
+        }
+        .disk-svg path[fill="mediumpurple"] {
+            fill: #ff2c7d !important;
+        }
+        .disk-svg path[fill="rebeccapurple"] {
+            fill: #ff6b81 !important;
+        }
+        .disk-center {
+            background-color: #ffc0cb !important;
+            border-color: #e63946 !important;
+        }
+        .player-name {
+            color: #e63946 !important;
+        }
+        .player-artist {
+            color: #ff6b81 !important;
+        }
+        .player-controls svg {
+            color: #e63946 !important;
+            stroke: #e63946 !important;
         }
 
+        /* --- 7. NEW: Mobile Responsive Fixes --- */
+        @media (max-width: 640px) {
+            /* หน้าแรก: ซ่อนชีพจรที่เกะกะ */
+            .loading {
+                display: none;
+            }
+
+            /* หน้าแรก: ย่อ Music Player */
+            #music-player-container {
+                transform: scale(0.8) translateX(25px); /* ย่อและขยับขวาเล็กน้อย */
+            }
+            
+            /* Terminal: ย่อ ASCII Art ไม่ให้ล้นจอ */
+            .text-pink-600.whitespace-pre {
+                font-size: 0.6rem; /* 9.6px */
+                line-height: 1rem; /* 16px */
+            }
+
+            /* Terminal: ย่อ Gallery Image */
+            .gallery-image {
+                max-height: 300px;
+            }
+
+            /* Terminal: ย้ายปุ่มลอยไม่ให้ชิดขอบ */
+            #floating-button-container {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            /* Final Card: ปรับขนาดให้พอดีจอเล็ก */
+            .card {
+                width: 95%;
+                min-height: auto;
+                padding: 15px;
+            }
+            .card-body {
+                font-size: 14px;
+            }
+        }
+        
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
+    <!-- Hidden Fancy Loader HTML for cloning in JS -->
     <div id="fancyLoaderTemplate" class="hidden">
         <div class="loader-fancy">
-            <div class="container"><div class="carousel"><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div></div></div>
-            <div class="container"><div class="carousel"><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div></div></div>
-            <div class="container"><div class="carousel"><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div></div></div>
-        </div>
-    </div>
-    
-    <div id="security-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center border-4 border-pink-200 transform transition-all scale-100">
-            <div class="mb-4 text-5xl">🔐</div>
-            <h3 class="text-2xl font-bold text-pink-500 mb-2 font-kanit">Security Check</h3>
-            <p id="modal-prompt" class="text-gray-600 mb-6 font-kanit"></p>
-            <input type="text" id="modal-input" class="w-full border-2 border-pink-200 rounded-lg px-4 py-2 text-center focus:outline-none focus:border-pink-400 font-kanit mb-2 text-black" placeholder="กรอกรหัสที่นี่...">
-            <p id="modal-error" class="text-red-500 text-sm mb-4 hidden font-kanit">รหัสผิด! ลองใหม่อีกครั้งนะ</p>
-            <button id="modal-submit" class="w-full bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 rounded-lg transition-colors font-kanit">
-                ยืนยัน
-            </button>
+            <div class="container">
+                <div class="carousel">
+                    <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div>
+                </div> 
+            </div>
+            <div class="container">
+                <div class="carousel">
+                    <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> 
+                </div> 
+            </div>
+            <div class="container">
+                <div class="carousel">
+                    <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> 
+                </div> 
+            </div>
         </div>
     </div>
 
-    <div id="entry-screen">
+    <!-- GLOBAL MUSIC PLAYER (ซ่อนไว้ก่อน) -->
+    <div id="music-player-container" class="transition-opacity duration-1000 opacity-0 transform scale-90">
+        <!-- FIXED LAYOUT: No more group/he classes -->
+        <div class="flex flex-col items-center select-none">
+            
+            <!-- (ลบแผ่นเสียงอันใหญ่ออก) -->
+            
+            <!-- ส่วนควบคุม (Card) -->
+            <div
+                class="z-30 flex flex-col transition-all duration-300 bg-white shadow-md rounded-2xl player-card"
+            >
+                <!-- ชื่อเพลง/ปกเพลง -->
+                <div class="flex flex-row w-full player-disc-area">
+                    <div
+                        class="relative flex items-center justify-center w-24 h-24 transition-all duration-100 player-disc-small"
+                    >
+                        <svg
+                            width="96"
+                            height="96"
+                            viewBox="0 0 128 128"
+                            class="duration-500 border-4 rounded-full shadow-md disk-svg border-zinc-400 border-spacing-5"
+                        >
+                            <!-- Disc Icon -->
+                             <rect width="128" height="128" fill="black"></rect>
+                            <circle cx="20" cy="20" r="2" fill="white"></circle>
+                            <circle cx="40" cy="30" r="2" fill="white"></circle>
+                            <circle cx="60" cy="10" r="2" fill="white"></circle>
+                            <circle cx="80" cy="40" r="2" fill="white"></circle>
+                            <circle cx="100" cy="20" r="2" fill="white"></circle>
+                            <circle cx="120" cy="50" r="2" fill="white"></circle>
+                            <circle
+                                cx="90" cy="30" r="10" fill="white" fill-opacity="0.5"
+                            ></circle>
+                            <circle cx="90" cy="30" r="8" fill="white"></circle>
+                            <path d="M0 128 Q32 64 64 128 T128 128" fill="purple" stroke="black" stroke-width="1"></path>
+                            <path d="M0 128 Q32 48 64 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
+                            <path d="M0 128 Q32 32 64 128 T128 128" fill="rebeccapurple" stroke="black" stroke-width="1"></path>
+                            <path d="M0 128 Q16 64 32 128 T64 128" fill="purple" stroke="black" stroke-width="1"></path>
+                            <path d="M64 128 Q80 64 96 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1"></path>
+                        </svg>
+                        <div
+                            class="absolute z-10 w-6 h-6 rounded-full shadow-sm top-9 left-9 bg-white disk-center border-4 border-zinc-400"
+                        ></div>
+                    </div>
+                    <div
+                        class="flex flex-col justify-center w-full pl-3 player-text-area"
+                    >
+                        <p class="text-xl font-bold player-name" id="current-song-name">My Love Song</p>
+                        <p class="text-zinc-600 player-artist" id="current-artist">อิน & แฟน</p>
+                    </div>
+                </div>
+                
+                <!-- Time Bar -->
+                <div
+                    class="flex flex-row mx-3 mt-3 bg-indigo-100 rounded-md min-h-4 player-range-bar"
+                >
+                    <span
+                        class="pl-3 text-sm text-zinc-600 player-range-time"
+                        id="current-time"
+                        >0:00</span
+                    >
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="0"
+                        id="playback-range"
+                        class="flex-grow h-1 mx-2 my-auto bg-gray-300 rounded-full appearance-none player-range-input [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-zinc-400 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md"
+                    />
+                    <span
+                        class="pr-3 text-sm text-zinc-600 player-range-time"
+                        id="total-time"
+                        >0:00</span
+                    >
+                </div>
+                
+                <!-- Controls -->
+                <div
+                    class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5 player-controls min-h-12"
+                >
+                    <!-- Play Mode (Repeat/Shuffle - Hidden since we loop the track anyway) -->
+                    <label for="playMode" class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
+                        <input type="checkbox" id="playMode" class="hidden peer/playMode" checked disabled/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat">
+                            <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                            <polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                    </label>
+                    
+                    <!-- Skip Back -->
+                    <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime -= 10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-back">
+                            <polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line>
+                        </svg>
+                    </div>
+                    
+                    <!-- Play/Pause Button (Controls actual HTML Audio Element) -->
+                    <label for="playStatus" class="flex items-center justify-center w-12 h-full cursor-pointer">
+                        <input type="checkbox" name="playStatus" id="playStatus" class="hidden peer/playStatus"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play" id="player-icon-play">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pause" id="player-icon-pause">
+                            <rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </label>
+                    
+                    <!-- Skip Forward -->
+                    <div class="flex items-center justify-center w-12 h-full cursor-pointer" onclick="bgMusic.currentTime += 10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-skip-forward">
+                            <polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line>
+                        </svg>
+                    </div>
+                    
+                    <!-- Playlist Icon (Hidden since we have one track) -->
+                    <div class="flex items-center justify-center h-full cursor-pointer player-controls-hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-12 feather feather-list">
+                            <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 1. หน้าแรก (ปุ่มหัวใจ Pixel) -->
+    <div id="entry-screen" class="absolute inset-0 z-50 flex items-center justify-center gap-8">
+        <!-- ชีพจรซ้าย -->
         <div class="loading">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -332,7 +861,9 @@
             </svg>
         </div>
         
+        <!-- หัวใจพิกเซล (ปุ่มกด) -->
         <div class="heart" id="heart-button">
+            <!-- แถวที่ 1-11 (ตามโค้ด Uiverse) -->
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div>
             <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div>
@@ -343,9 +874,10 @@
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel white"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
             <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel soft-pink"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
-            <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
+            <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div classDlass="pixel pink"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div> <div class="pixel"></div>
         </div>
         
+        <!-- ชีพจรขวา (ถูกซ่อนเมื่อ Music Player โผล่) -->
         <div class="loading" id="loading-right">
             <svg height="48px" width="64px">
                 <polyline id="back" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
@@ -353,81 +885,140 @@
             </svg>
         </div>
 
+        <!-- NEW: Cat Loader -->
         <div class="cat-loader-wrapper">
             <div class="catContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 733 673" class="catbody">
-                    <path fill="#ff6b81" d="M111.002 139.5C270.502 -24.5001 471.503 2.4997 621.002 139.5C770.501 276.5 768.504 627.5 621.002 649.5C473.5 671.5 246 687.5 111.002 649.5C-23.9964 611.5 -48.4982 303.5 111.002 139.5Z"></path>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 733 673"
+                    class="catbody"
+                >
+                    <path
+                        fill="#ff6b81"
+                        d="M111.002 139.5C270.502 -24.5001 471.503 2.4997 621.002 139.5C770.501 276.5 768.504 627.5 621.002 649.5C473.5 671.5 246 687.5 111.002 649.5C-23.9964 611.5 -48.4982 303.5 111.002 139.5Z"
+                    ></path>
                     <path fill="#ff6b81" d="M184 9L270.603 159H97.3975L184 9Z"></path>
                     <path fill="#ff6b81" d="M541 0L627.603 150H454.397L541 0Z"></path>
                 </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 158 564" class="tail">
-                    <path fill="#e63946" d="M5.97602 76.066C-11.1099 41.6747 12.9018 0 51.3036 0V0C71.5336 0 89.8636 12.2558 97.2565 31.0866C173.697 225.792 180.478 345.852 97.0691 536.666C89.7636 553.378 73.0672 564 54.8273 564V564C16.9427 564 -5.4224 521.149 13.0712 488.085C90.2225 350.15 87.9612 241.089 5.97602 76.066Z"></path>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 158 564"
+                    class="tail"
+                >
+                    <path
+                        fill="#e63946"
+                        d="M5.97602 76.066C-11.1099 41.6747 12.9018 0 51.3036 0V0C71.5336 0 89.8636 12.2558 97.2565 31.0866C173.697 225.792 180.478 345.852 97.0691 536.666C89.7636 553.378 73.0672 564 54.8273 564V564C16.9427 564 -5.4224 521.149 13.0712 488.085C90.2225 350.15 87.9612 241.089 5.97602 76.066Z"
+                    ></path>
                 </svg>
                 <div class="text">
-                    <span class="bigzzz">💖</span> <span class="zzz">💖</span>
+                    <span class="bigzzz">💖</span>
+                    <span class="zzz">💖</span>
                 </div>
             </div>
         </div>
+        
     </div>
 
+    <!-- 2. หน้า Terminal (ซ่อนไว้ตอนแรก) -->
     <div id="terminal-screen" class="hidden h-full flex flex-col">
-        <div class="bg-gray-100 p-3 flex justify-start items-center gap-2 border-b border-gray-300 text-sm select-none sticky top-0 z-40">
+        <!-- Header -->
+        <div class="bg-gray-100 p-2 flex justify-start items-center gap-2 border-b border-gray-300 text-sm select-none">
             <div class="w-3 h-3 rounded-full bg-red-500"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div class="w-3 h-3 rounded-full bg-green-500"></div>
             <div class="ml-4 text-gray-500">HNY_Surprise.exe</div>
         </div>
 
-        <div id="terminal" class="flex-1">
-            </div>
-    </div>
-    
-    <div id="floating-button-container" class="hidden">
+        <!-- Terminal Output -->
+        <div id="terminal" class="flex-1 p-4 md:p-6 overflow-y-auto space-y-3 code-font text-sm md:text-base leading-relaxed">
+            <!-- Log จะถูกเติมเข้ามาตรงนี้ -->
         </div>
 
+        <!-- Input Area (ลบออกแล้ว) -->
+    </div>
+    
+    <!-- 3. NEW: Floating Button Container (สำหรับปุ่ม Connect/Run/Submit) -->
+    <div id="floating-button-container" class="hidden fixed bottom-30 right-30 z-90 p-4">
+        <!-- ปุ่มจะถูกเติมเข้ามาตรงนี้ -->
+    </div>
+
+
+    <!-- 4. เพลง (ซ่อนไว้) -->
     <audio id="bg-music" src="https://files.catbox.moe/wpxsyq.mp3" loop></audio>
 
+
     <script>
+        // --- 1. ตัวแปรหลัก ---
         const entryScreen = document.getElementById('entry-screen');
         const heartButton = document.getElementById('heart-button');
         const terminalScreen = document.getElementById('terminal-screen');
         const terminal = document.getElementById('terminal');
-        const inputArea = document.getElementById('floating-button-container');
+        const inputArea = document.getElementById('floating-button-container'); // !!! ใช้ Floating Container !!!
         const bgMusic = document.getElementById('bg-music');
+        const loadingRight = document.getElementById('loading-right');
         
-        // Modal Elements
-        const modal = document.getElementById('security-modal');
-        const modalInput = document.getElementById('modal-input');
-        const modalSubmit = document.getElementById('modal-submit');
-        const modalPrompt = document.getElementById('modal-prompt');
-        const modalError = document.getElementById('modal-error');
-        const modalContent = document.getElementById('modal-content');
+        let connectSound, errorSound, successSound, chimeSound; // ประกาศตัวแปร SFX
+
+        // Template for Fancy Loader (for Gallery Preload)
+        const fancyLoaderHtml = `
+            <div class="loader-fancy">
+                <div class="container">
+                    <div class="carousel">
+                        <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div> <div class="love"></div>
+                    </div> 
+                </div>
+                <div class="container">
+                    <div class="carousel">
+                        <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> <div class="death"></div> 
+                    </div> 
+                </div>
+                <div class="container">
+                    <div class="carousel">
+                        <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> <div class="robots"></div> 
+                    </div> 
+                </div>
+            </div>
+        `;
 
         let currentStep = 0;
         let audioReady = false; 
         let audioSetupPromise = null; 
-        let connectSound, errorSound, successSound, chimeSound;
-
-        // --- Story Config ---
+        
+        // --- 2. เนื้อเรื่องของเรา (แก้ไขตรงนี้) ---
         const storySteps = [
-            { type: 'connect', buttonText: 'เชื่อมต่อ', resultText: 'สวัสดีคนไกล :)' },
-            { type: 'message', buttonText: 'รันความทรงจำ', resultText: 'กำลังค้นหาความทรงจำปี 2025... พบ 6 รายการ...' },
+            { 
+                type: 'connect',
+                buttonText: 'เชื่อมต่อ',
+                resultText: 'สวัสดีคนไกล :)' 
+            },
+            { 
+                type: 'message',
+                buttonText: 'รันความทรงจำ',
+                resultText: 'กำลังค้นหาความทรงจำปี 2025... พบ 6 รายการ...' 
+            },
             {
                 type: 'gallery',
                 buttonText: 'เปิดแกลเลอรี',
                 images: [
-                    'https://files.catbox.moe/3hryre.jpg',
-                    'https://files.catbox.moe/fzvku9.jpg',
-                    'https://files.catbox.moe/p6ftp0.JPG',
-                    'https://files.catbox.moe/a3742g.PNG',
-                    'https://files.catbox.moe/wbsesd.jpg',
-                    'https://files.catbox.moe/9rlltx.jpg'
+                    'https://files.catbox.moe/3hryre.jpg', // 1
+                    'https://files.catbox.moe/fzvku9.jpg', // 2
+                    'https://files.catbox.moe/p6ftp0.JPG', // 3
+                    'https://files.catbox.moe/a3742g.PNG', // 4
+                    'https://files.catbox.moe/wbsesd.jpg', // 5
+                    'https://files.catbox.moe/9rlltx.jpg'  // 6
                 ]
             },
-            { type: 'message', buttonText: 'ดูต่อ', resultText: 'ถึงตัวจะไกล... แต่รู้มั้ยว่า...' },
+            { 
+                type: 'message',
+                buttonText: 'ดูต่อ',
+                resultText: 'ถึงตัวจะไกล... แต่รู้มั้ยว่า...' 
+            },
             { 
                 type: 'ascii',
                 buttonText: 'วาดความรู้สึก',
+                // หัวใจซากุระ
                 asciiArt: [
                     '⬜⬜🌸⬜⬜⬜⬜⬜⬜⬜⬜⬜🌸⬜⬜',
                     '⬜⬜⬜⬜⬜⬜🌸⬜⬜⬜⬜⬜⬜⬜⬜',
@@ -446,88 +1037,252 @@
                     '⬜⬜🌸⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜'
                 ]
             },
-            { type: 'message', buttonText: 'ไปต่อ', resultText: 'เกือบเสร็จแล้ว... เหลือแค่ยืนยันตัวตนอีกนิดเดียว' },
+            {
+                type: 'message',
+                buttonText: 'ไปต่อ',
+                resultText: 'เกือบเสร็จแล้ว... เหลือแค่ยืนยันตัวตนอีกนิดเดียว'
+            },
             { 
                 type: 'input',
                 buttonText: 'ตรวจสอบสิทธิ์',
                 promptText: 'รหัสลับของเรา (คำใบ้: สถานที่ ที่เจอกันครั้งแรก):',
-                correctAnswer: 'สถานีรถไฟตันหยงมัส' 
+                correctAnswer: 'สถานีรถไฟตันหยงมัส' // <--- !!! อินต้องแก้ 'สถานีรถไฟตันหยงมัส' เป็นคำตอบจริง !!!
             },
-            { type: 'final', buttonText: 'กดตรงนี้', resultText: 'กำลังโหลด รอสักครู่...' }
+            { 
+                type: 'final',
+                buttonText: 'กดตรงนี้',
+                resultText: 'กำลังโหลด รอสักครู่...' 
+            }
         ];
         
-        // --- Audio Setup ---
+        // --- 3. ฟังก์ชันเกี่ยวกับเสียง (Tone.js) ---
         async function setupAudio() {
             if (audioReady) return true;
+            
             try {
-                if (typeof Tone === 'undefined') return false;
+                if (typeof Tone === 'undefined') {
+                    console.error("Tone.js library not loaded.");
+                    return false;
+                }
+                
+                // *** AWAIT TONE.START() ***
                 await Tone.start();
-                connectSound = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 } }).toDestination();
-                errorSound = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 } }).toDestination();
-                successSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 } }).toDestination();
-                chimeSound = new Tone.PolySynth(Tone.Synth, { envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 } }).toDestination();
+                console.log("Tone.js audio context started.");
+
+                // Initialize Tone Synths
+                connectSound = new Tone.Synth({
+                    oscillator: { type: 'square' },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }
+                }).toDestination();
+                
+                errorSound = new Tone.Synth({
+                    oscillator: { type: 'triangle' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+                }).toDestination();
+                
+                successSound = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }
+                }).toDestination();
+
+                chimeSound = new Tone.PolySynth(Tone.Synth, {
+                    envelope: { attack: 0.01, decay: 0.5, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                
                 audioReady = true;
                 return true;
-            } catch (e) { return false; }
-        }
-        function playSound(sound, note, duration = '16n') {
-            if (!audioReady || !sound) return;
-            try { sound.triggerAttackRelease(note, duration); } catch (e) {}
+
+            } catch (e) {
+                console.error("Error setting up audio:", e);
+                audioReady = false;
+                return false;
+            }
         }
 
-        // --- Init ---
+        function playSound(sound, note, duration = '16n') {
+            if (!audioReady || !sound) return; // Check audioReady flag
+            try {
+                sound.triggerAttackRelease(note, duration);
+            } catch (e) {
+                // console.error("Sound play error:", e);
+            }
+        }
+
+
+        // --- 4. รอโหลดหน้าเว็บเสร็จค่อยทำงาน ---
         window.onload = () => {
+            
+            // --- PLAYER CONTROLS SETUP ---
+            // Function to update the music player details 
+            function updatePlayerDetails() {
+                const songName = document.getElementById('current-song-name');
+                const artistName = document.getElementById('current-artist');
+                const playStatusCheckbox = document.getElementById('playStatus');
+
+                // FIX: Check if elements exist before reading properties
+                if (!songName || !playStatusCheckbox) return;
+
+                if (bgMusic.readyState > 0) {
+                    if(document.getElementById('total-time')) {
+                        document.getElementById('total-time').innerText = formatTime(bgMusic.duration);
+                    }
+                    updatePlayPauseIcons(!bgMusic.paused);
+                }
+                
+                songName.innerText = "NPY (New Year's Present)";
+                artistName.innerText = "Polycat";
+            }
+
+            // Time formatting helper
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+            }
+            
+            const playerIconPlay = document.getElementById('player-icon-play');
+            const playerIconPause = document.getElementById('player-icon-pause');
+            const playStatusCheckbox = document.getElementById('playStatus');
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            
+            // Check if player controls exist before setting up listeners (for safety)
+            if (playStatusCheckbox) {
+                // Update Time Bar
+                bgMusic.addEventListener('timeupdate', () => {
+                    const currentTimeElement = document.getElementById('current-time');
+                    const totalTimeElement = document.getElementById('total-time');
+                    const rangeInput = document.getElementById('playback-range');
+
+                    if (bgMusic.duration && rangeInput && currentTimeElement && totalTimeElement) {
+                        currentTimeElement.innerText = formatTime(bgMusic.currentTime);
+                        totalTimeElement.innerText = formatTime(bgMusic.duration);
+                        if (document.activeElement !== rangeInput) { // Only update if user is not dragging
+                            rangeInput.value = (bgMusic.currentTime / bgMusic.duration) * 100;
+                        }
+                    }
+                });
+
+                // Sync range input with actual playback
+                const rangeInput = document.getElementById('playback-range');
+                if(rangeInput) {
+                    rangeInput.addEventListener('input', () => {
+                        if (bgMusic.duration) {
+                            bgMusic.currentTime = (rangeInput.value / 100) * bgMusic.duration;
+                        }
+                    });
+                }
+
+
+                function updatePlayPauseIcons(isPlaying) {
+                     if (playerIconPlay && playerIconPause) {
+                         if (isPlaying) {
+                            playerIconPlay.style.display = 'none';
+                            playerIconPause.style.display = 'inline-block';
+                         } else {
+                            playerIconPlay.style.display = 'inline-block';
+                            playerIconPause.style.display = 'none';
+                         }
+                     }
+                }
+
+                // Update Play/Pause based on the audio element
+                playStatusCheckbox.addEventListener('change', () => {
+                    if (playStatusCheckbox.checked) {
+                        bgMusic.play().catch(e => console.error("Play failed:", e));
+                    } else {
+                        bgMusic.pause();
+                    }
+                });
+
+                bgMusic.addEventListener('loadedmetadata', updatePlayerDetails);
+                bgMusic.addEventListener('play', () => {
+                     playStatusCheckbox.checked = true;
+                     updatePlayPauseIcons(true);
+                });
+                bgMusic.addEventListener('pause', () => {
+                     playStatusCheckbox.checked = false;
+                     updatePlayPauseIcons(false);
+                });
+
+                updatePlayerDetails();
+                updatePlayPauseIcons(false);
+            }
+            // --- END PLAYER CONTROLS SETUP ---
+
+
+            // 1. รอคลิกปุ่มหัวใจ (Entry point)
             heartButton.onclick = async () => { 
+                
                 try {
-                    if (!audioSetupPromise) audioSetupPromise = setupAudio();
+                    // 1.0 *** AWAIT AUDIO SETUP ***
+                    if (!audioSetupPromise) { 
+                        audioSetupPromise = setupAudio();
+                    }
                     await audioSetupPromise;
-                } catch (e) {}
+                    console.log("Audio setup complete.");
+                    
+                } catch (audioError) {
+                    console.error("Audio setup failed, continuing without sound effects:", audioError);
+                    audioReady = false; 
                 
-                bgMusic.play().catch(e => console.log(e));
-                
-                entryScreen.style.opacity = '0';
-                setTimeout(() => { entryScreen.style.display = 'none'; }, 500);
-                
-                terminalScreen.classList.remove('hidden');
-                showNextButton(); 
+                } finally {
+                    // 1.1 เล่นเพลงตอนกดหัวใจ (ทำต่อไปแม้ audio context จะพัง)
+                    // *** FIX: Checkbox state before playing ***
+                    if(playStatusCheckbox) {
+                        playStatusCheckbox.checked = true; 
+                        updatePlayPauseIcons(true); 
+                    }
+                    bgMusic.play().catch(e => {
+                        console.error("Audio play failed:", e);
+                        if(playStatusCheckbox) {
+                            playStatusCheckbox.checked = false; 
+                            updatePlayPauseIcons(false);
+                        }
+                    });
+                    
+                    // 1.2 โชว์ Music Player
+                    if (musicPlayerContainer) {
+                        musicPlayerContainer.classList.remove('opacity-0');
+                        musicPlayerContainer.style.opacity = '1';
+                    }
+                    if (loadingRight) loadingRight.style.display = 'none'; // ซ่อนชีพจรขวา
+                    
+                    // 1.3 ซ่อนปุ่ม (Heart Screen)
+                    entryScreen.style.transition = 'opacity 0.5s ease-out';
+                    entryScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        entryScreen.style.display = 'none';
+                    }, 500);
+                    
+                    // 1.4 โชว์ Terminal
+                    terminalScreen.classList.remove('hidden');
+                    
+                    // 1.5 รีเซ็ต Terminal Style ให้เป็นโหมด Log 
+                    terminal.style.display = ''; 
+                    terminal.style.flexDirection = ''; 
+                    terminal.style.alignItems = ''; 
+                    terminal.style.justifyContent = ''; 
+                    terminal.style.overflowY = 'auto'; 
+                    terminal.innerHTML = ''; 
+                    
+                    // 1.6 เริ่มรันสเต็ปแรก (โชว์ปุ่ม 'เชื่อมต่อ')
+                    showNextButton(); 
+                }
             };
         };
 
-        // --- Display Functions ---
-        function logToTerminal(text, type = 'command') {
-            const line = document.createElement('div');
-            line.className = 'mb-2 break-words'; 
-
-            if (type === 'command') {
-                line.innerHTML = `<span class="text-pink-600 mr-2">&gt;</span>${text}`;
-            } else if (type === 'result') {
-                line.className += ' text-gray-700';
-            } else if (type === 'error') {
-                line.className += ' text-red-600';
-                line.innerText = text;
-                playSound(errorSound, 'C3', '4n');
-            } else if (type === 'loader') {
-                line.innerHTML = text;
-            } else if (type === 'ascii') {
-                line.className += ' ascii-art-text'; 
-                line.innerText = text;
-            } else if (type === 'gallery') {
-                line.className += ' gallery-container';
-            }
-            
-            terminal.appendChild(line);
-            window.scrollTo(0, document.body.scrollHeight);
-            return line;
-        }
-
+        // --- 5. ฟังก์ชันหลักของ Terminal ---
+        
+        // พิมพ์ข้อความ (Auto-typing)
         function typeWriter(element, text, callback) {
             let i = 0;
-            element.innerHTML = ''; 
+            element.innerHTML = ''; // เคลียร์ข้อความเก่า
+            
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
                     i++;
-                    setTimeout(type, 30);
+                    setTimeout(type, 30); // ความเร็วพิมพ์
                 } else {
                     if (callback) callback();
                 }
@@ -535,22 +1290,57 @@
             type();
         }
 
+        // เพิ่ม Log ในจอ
+        function logToTerminal(text, type = 'command') {
+            const line = document.createElement('div');
+            if (type === 'command') {
+                line.innerHTML = `<span class="text-pink-600">&gt;</span> ${text}`; // สีชมพูเข้ม
+            } else if (type === 'result') {
+                line.className = 'text-gray-700'; // ใช้สีเข้ม
+                line.innerText = '';
+            } else if (type === 'error') {
+                line.className = 'text-red-600'; // สีเข้มขึ้น
+                line.innerText = text;
+                playSound(errorSound, 'C3', '4n'); // SFX
+            } else if (type === 'loader') {
+                line.innerHTML = text; // ใส่ HTML ของ Loader ได้เลย
+            } else if (type === 'ascii') {
+                // FIX Mobile: ย่อขนาด ASCII Art บนจอมือถือ
+                line.className = 'text-pink-600 whitespace-pre text-[10px] sm:text-base'; 
+                line.innerText = text;
+            } else if (type === 'gallery') {
+                line.className = 'gallery-container'; // CSS container ของแกลเลอรี
+                // เนื้อหาจะถูกสร้างโดยฟังก์ชัน Gallery
+            }
+            
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+            return line; // คืนค่า element ไว้
+        }
+
+        // นับเปอร์เซ็นต์
         function runPercentCounter(startText, endText, callback) {
             const line = logToTerminal(startText, 'result');
             let percent = 0;
+            
             const interval = setInterval(() => {
                 percent++;
                 line.innerText = `${startText} ${percent}%...`;
                 playSound(connectSound, 'C5', '32n');
+                
                 if (percent >= 100) {
                     clearInterval(interval);
                     line.innerText = `${startText} ${percent}%... ${endText}`;
                     playSound(chimeSound, ['C5', 'E5', 'G5'], '8n');
-                    setTimeout(() => { if (callback) callback(); }, 500); 
+                    
+                    setTimeout(() => {
+                        if (callback) callback();
+                    }, 500); // ดีเลย์หลังเชื่อมต่อสำเร็จ
                 }
             }, 25);
         }
         
+        // วาด ASCII Art
         function drawAsciiArt(artArray, callback) {
             let i = 0;
             function drawLine() {
@@ -558,7 +1348,7 @@
                     logToTerminal(artArray[i], 'ascii');
                     playSound(connectSound, 'D5', '32n');
                     i++;
-                    setTimeout(drawLine, 200); 
+                    setTimeout(drawLine, 200); // ดีเลย์ 200ms
                 } else {
                     if (callback) callback();
                 }
@@ -566,61 +1356,84 @@
             drawLine();
         }
 
+        // ยิงพลุ!
         function launchConfetti() {
             if (typeof confetti === 'undefined') return;
+
             const duration = 5 * 1000;
             const animationEnd = Date.now() + duration;
+            
             const shoot = (origin) => {
-                confetti({ ...origin, particleCount: 100, spread: 80, colors: ['#ffc0cb', '#e63946', '#f1a1b4', '#ffffff'] });
+                confetti({
+                    ...origin,
+                    particleCount: 100,
+                    spread: 80,
+                    ticks: 600,
+                    gravity: 1.2,
+                    decay: 0.95,
+                    scalar: 1.2,
+                    colors: ['#ffc0cb', '#e63946', '#f1a1b4', '#ffffff'] // ชมพู/แดง/ขาว
+                });
             };
+
             const interval = setInterval(() => {
-                if (Date.now() > animationEnd) return clearInterval(interval);
-                shoot({ origin: { x: 0, y: 0.7 } });
-                shoot({ origin: { x: 1, y: 0.7 } });
+                if (Date.now() > animationEnd) {
+                    return clearInterval(interval);
+                }
+                shoot({ origin: { x: 0, y: 0.7 } }); // ซ้าย
+                shoot({ origin: { x: 1, y: 0.7 } }); // ขวา
             }, 250);
         }
 
+        // โชว์ปุ่มถัดไป
         function showNextButton() {
             const step = storySteps[currentStep];
             if (!step) return; 
+
             const button = document.createElement('button');
             button.innerText = step.buttonText;
             button.className = 'run-button';
             button.onclick = () => {
-                inputArea.classList.add('hidden');
+                playSound(connectSound, 'A4');
+                // ซ่อนปุ่มลอยทันทีเมื่อกด
+                inputArea.classList.add('hidden'); 
                 runCurrentStep();
             };
+
             inputArea.innerHTML = '';
             inputArea.appendChild(button);
-            inputArea.classList.remove('hidden');
+            inputArea.classList.remove('hidden'); // โชว์ปุ่มลอย
         }
 
+        // รันสเต็ปปัจจุบัน
         function runCurrentStep() {
             const step = storySteps[currentStep];
             if (!step) return;
-            
-            // If input type, don't log command yet, wait for modal
-            if (step.type !== 'input') {
-                logToTerminal(step.buttonText, 'command');
-            }
+
+            // ไม่ต้องใส่ processing ตรงนี้ ถ้าปุ่มมันจะหายไปแล้ว
+            logToTerminal(step.buttonText, 'command');
 
             executeStepAction(step, () => {
                 currentStep++;
                 if (currentStep < storySteps.length) {
                     showNextButton();
                 } else {
-                    inputArea.classList.add('hidden');
+                    // Final step ends here (onComplete in executeStepAction handles the final card)
+                    inputArea.classList.add('hidden'); // ซ่อนปุ่มลอย
                 }
             });
         }
 
+        // ฟังก์ชันแยก Logic การทำงาน
         function executeStepAction(step, onComplete) {
+            
             if (step.type === 'connect') {
                 runPercentCounter("กำลังเชื่อมต่อ...", "สำเร็จ!", () => {
                     const line = logToTerminal("", 'result');
                     typeWriter(line, step.resultText, onComplete);
                 });
             } 
+            
             else if (step.type === 'message') {
                 const line = logToTerminal("", 'result');
                 let textToType = step.resultText;
@@ -629,24 +1442,49 @@
                 }
                 typeWriter(line, textToType, onComplete);
             } 
+
+            // *** Bulk Preload Gallery Images ***
             else if (step.type === 'gallery') {
+                terminal.style.display = 'flex';
+                terminal.style.flexDirection = 'column';
+                terminal.style.alignItems = 'center';
+                terminal.style.justifyContent = 'center';
+                terminal.style.overflowY = 'hidden'; 
+                terminal.innerHTML = '';
+
                 const startBulkPreload = () => {
                     return new Promise(resolve => {
                         let loadedCount = 0;
                         let totalImages = step.images.length;
                         const preloadedImages = [];
-                        const statusLine = logToTerminal(`กำลังโหลดความทรงจำ (0/${totalImages})...`, 'result');
                         
+                        const preloaderLine = document.createElement('div');
+                        preloaderLine.className = 'gallery-container flex-col !items-center !justify-center p-8';
+                        preloaderLine.innerHTML = `
+                            <div class="text-3xl font-bold mb-4 text-pink-600" id="preloadStatus">กำลังโหลดความทรงจำ (0/${totalImages})...</div>
+                            ${fancyLoaderHtml}
+                        `;
+                        terminal.appendChild(preloaderLine);
+                        const statusElement = document.getElementById('preloadStatus');
+
                         if (totalImages === 0) return resolve([]);
 
                         step.images.forEach((src) => {
                             const img = new Image();
                             img.onload = img.onerror = () => {
                                 loadedCount++;
-                                statusLine.innerText = `กำลังโหลดความทรงจำ (${loadedCount}/${totalImages})...`;
-                                if (img.complete && img.naturalHeight !== 0) preloadedImages.push(img); 
-                                else preloadedImages.push({src: src, alt: "Error"});
-                                if (loadedCount === totalImages) resolve(preloadedImages.filter(img => img.src)); 
+                                statusElement.innerText = `กำลังโหลดความทรงจำ (${loadedCount}/${totalImages})...`;
+                                playSound(connectSound, 'C5', '32n');
+                                
+                                if (img.complete && img.naturalHeight !== 0) {
+                                    preloadedImages.push(img); 
+                                } else {
+                                    preloadedImages.push({src: src, alt: "Load Error"});
+                                }
+                                
+                                if (loadedCount === totalImages) {
+                                    resolve(preloadedImages.filter(img => img.src)); 
+                                }
                             };
                             img.src = src;
                         });
@@ -654,17 +1492,24 @@
                 };
 
                 startBulkPreload().then(preloadedImages => {
+                    terminal.style.display = '';
+                    terminal.style.flexDirection = '';
+                    terminal.style.alignItems = '';
+                    terminal.style.justifyContent = '';
+                    terminal.style.overflowY = 'auto'; 
+                    terminal.innerHTML = ''; 
+
                     const galleryContainer = logToTerminal("", 'gallery');
                     let currentImageIndex = 0;
 
                     galleryContainer.innerHTML = `
-                        <div class="gallery-image-wrapper">
-                            <img id="galleryImage" class="gallery-image" src="${preloadedImages[0].src}" alt="Memory 1">
-                        </div>
-                        <div class="gallery-controls flex justify-center mt-2 gap-4">
-                            <button id="prevButton" class="gallery-button">&lt; ก่อนหน้า</button>
+                        <div class="gallery-controls">
+                            <button id="prevButton" class="run-button !py-2 !px-4">&lt; ก่อนหน้า</button>
                             <span id="imageCounter" class="gallery-counter font-bold text-lg text-pink-600">1 / ${preloadedImages.length}</span>
-                            <button id="nextButton" class="gallery-button">ถัดไป &gt;</button>
+                            <button id="nextButton" class="run-button !py-2 !px-4">ถัดไป &gt;</button>
+                        </div>
+                        <div class="gallery-image-wrapper">
+                            <img id="galleryImage" class="gallery-image" alt="Memory ${currentImageIndex+1}">
                         </div>
                     `;
                     
@@ -672,17 +1517,17 @@
                     const prevButton = galleryContainer.querySelector('#prevButton');
                     const nextButton = galleryContainer.querySelector('#nextButton');
                     const counterElement = galleryContainer.querySelector('#imageCounter');
-                    
-                    // Style buttons inline
-                    const btnStyle = "background:white; color:#e63946; border:1px solid #e63946; padding:5px 10px; border-radius:5px; font-family:monospace;";
-                    prevButton.style.cssText = btnStyle;
-                    nextButton.style.cssText = btnStyle;
-                    prevButton.disabled = true;
 
                     const updateImage = (index) => {
+                        const img = preloadedImages[index];
+                        
                         imgElement.style.opacity = '0'; 
-                        imgElement.src = preloadedImages[index].src; 
-                        setTimeout(() => { imgElement.style.opacity = '1'; }, 50);
+                        imgElement.src = img.src; 
+                        
+                        setTimeout(() => {
+                            imgElement.style.opacity = '1'; 
+                        }, 50);
+
                         counterElement.innerText = `${index + 1} / ${preloadedImages.length}`;
                         prevButton.disabled = (index === 0);
                         nextButton.disabled = (index === preloadedImages.length - 1);
@@ -703,92 +1548,136 @@
                             playSound(connectSound, 'E5');
                         }
                     };
+
+                    updateImage(0); 
                     onComplete();
                 });
             }
+            
             else if (step.type === 'ascii') {
-                drawAsciiArt(step.asciiArt, onComplete);
-            } 
-            else if (step.type === 'input') {
-                // Show Modal Logic
-                modalPrompt.innerText = step.promptText;
-                modalInput.value = '';
-                modalError.classList.add('hidden');
-                modal.classList.remove('hidden');
-                setTimeout(() => modalInput.focus(), 100);
-
-                const handleModalSubmit = () => {
-                    const answer = modalInput.value.trim();
-                    if (answer === step.correctAnswer) {
-                        // Correct
-                        playSound(successSound, 'G5');
-                        modal.classList.add('hidden');
-                        logToTerminal(step.buttonText, 'command'); // Log the action now
-                        logToTerminal(`รหัสถูกต้อง: ${answer}`, 'result');
-                        modalSubmit.removeEventListener('click', handleModalSubmit); // Clean up
-                        onComplete();
-                    } else {
-                        // Wrong
-                        playSound(errorSound, 'C3', '4n');
-                        modalError.classList.remove('hidden');
-                        modalContent.classList.add('shake');
-                        setTimeout(() => modalContent.classList.remove('shake'), 500);
-                        modalInput.value = '';
-                        modalInput.focus();
-                    }
-                };
-
-                modalSubmit.onclick = handleModalSubmit;
-                // Handle Enter key in modal
-                modalInput.onkeydown = (e) => {
-                    if (e.key === 'Enter') handleModalSubmit();
-                };
-            } 
-            else if (step.type === 'final') {
-                // Fancy Loader for Final Step
-                const loaderHtml = `
-                <div class="flex flex-col items-center justify-center py-10">
-                    <div class="loader-fancy">
-                        <div class="container"><div class="carousel"><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div><div class="love"></div></div></div>
-                        <div class="container"><div class="carousel"><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div><div class="death"></div></div></div>
-                        <div class="container"><div class="carousel"><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div><div class="robots"></div></div></div>
-                    </div>
-                    <div class="text-pink-600 mt-4 font-bold text-xl">กำลังโหลด...</div>
-                </div>
-                `;
-                const finalLoader = logToTerminal(loaderHtml, 'loader');
+                const loader1 = logToTerminal(
+                    `<div class="loader-text">
+                        กำลังวาด...
+                        <span class="Particle_heart">♥</span> <span class="Particle_heart">♥</span>
+                        <span class="Particle_heart">♥</span> <span class="Particle_heart">♥</span>
+                    </div>`, 'loader'
+                );
                 
                 setTimeout(() => {
+                    loader1.remove();
+                    const loader2 = logToTerminal(
+                        '<div class="flex justify-center py-4"><div class="loader-heart"></div></div>', 'loader'
+                    );
+
+                    setTimeout(() => {
+                        loader2.remove();
+                        drawAsciiArt(step.asciiArt, onComplete);
+                    }, 3000);
+                }, 5000);
+            } 
+            
+            else if (step.type === 'input') {
+                const line = logToTerminal("", 'result');
+                typeWriter(line, step.promptText, () => {
+                    const inputField = document.createElement('input');
+                    inputField.type = 'text';
+                    inputField.className = 'terminal-input code-font';
+                    inputField.onkeydown = (e) => {
+                        if (e.key === 'Enter') checkAnswer();
+                    };
+
+                    const submitButton = document.createElement('button');
+                    submitButton.innerText = 'ส่งคำตอบ';
+                    submitButton.className = 'run-button ml-2';
+                    submitButton.onclick = checkAnswer;
+
+                    // ใช้ inputArea ที่เป็น Floating Container
+                    inputArea.innerHTML = '';
+                    inputArea.appendChild(inputField);
+                    inputArea.appendChild(submitButton);
+                    inputField.focus();
+                    inputArea.classList.remove('hidden');
+
+
+                    function checkAnswer() {
+                        const answer = inputField.value;
+                        if (answer.trim() === step.correctAnswer) {
+                            playSound(successSound, 'G5');
+                            logToTerminal(`รหัสถูกต้อง: ${answer}`, 'command');
+                            onComplete();
+                        } else {
+                            playSound(errorSound, 'C3', '4n');
+                            logToTerminal(`รหัสผิดพลาด! '${answer}' ไม่ถูกต้อง`, 'error');
+                            inputField.value = '';
+                            inputField.focus();
+                        }
+                    }
+                });
+            } 
+            
+            else if (step.type === 'final') {
+                
+                // 1. Clear terminal output area and show full screen loader
+                terminal.innerHTML = ''; 
+                inputArea.innerHTML = '';
+                
+                // *** Apply Centering Styles for the Loader ***
+                terminal.style.display = 'flex';
+                terminal.style.flexDirection = 'column';
+                terminal.style.alignItems = 'center';
+                terminal.style.justifyContent = 'center';
+                terminal.style.overflowY = 'hidden'; 
+                // ********************************************
+
+                // 2. Simple Beating Heart Loader HTML
+                const loaderHtml = `
+                    <div class="heartbeatloader-container">
+                        <div class="text-3xl font-bold mb-4" style="background-image: linear-gradient(90deg, #ff0037 0%, #ff2c7d 10%); -webkit-background-clip: text; color: transparent;">
+                            กำลังโหลด
+                        </div>
+                        <span class="simple-heart-loader"></span>
+                        <div class="text-lg text-gray-700 mt-16 code-font">
+                            ${step.resultText}
+                        </div>
+                    </div>
+                `;
+
+                const finalLoader = logToTerminal(loaderHtml, 'loader');
+                
+                // 3. Delay the actual surprise (Confetti + Final Message)
+                setTimeout(() => {
+                    // 4. Clear the loader
                     finalLoader.remove();
-                    terminal.innerHTML = ''; // Clear screen
-                    launchConfetti();
+                    terminal.innerHTML = ''; 
                     
-                    // Final Card
+                    launchConfetti(); // Bang!
+                    
+                    const finalMessageText = "Happy New Year 2026!\nถึงตัวจะไกล... แต่ใจไม่เคยห่างนะ\nขอให้ปีหน้าเป็นปีที่มีแต่ความสุข\nรักนะอิน! 💖"; 
                     const finalCardHtml = `
-                        <div class="card">
-                            <div class="card-image bg-pink-600/30 flex items-center justify-center">
-                                <span class="text-6xl animate-pulse">🎁</span>
+                        <div class="card-container">
+                            <div class="card">
+                                <div class="card-image bg-pink-600/30 flex items-center justify-center">
+                                    <span class="text-6xl animate-pulse">🎁</span>
+                                </div>
+                                <p class="card-title text-[#ffc0cb] mt-4">New Year's Present for My Love</p>
+                                <p class="card-body text-gray-300">
+                                    ${finalMessageText}
+                                </p>
+                                <p class="footer">ส่งจาก: <span class="by-name text-[#ffc0cb]">อิน</span> on <span class="date">${new Date().toLocaleDateString('th-TH')}</span></p>
                             </div>
-                            <p class="card-title text-[#ffc0cb] mt-4">New Year's Present for My Love</p>
-                            <p class="card-body text-gray-300">
-                                Happy New Year 2026!<br>
-                                ถึงตัวจะไกล... แต่ใจไม่เคยห่างนะ<br>
-                                รักนะอิน! 💖
-                            </p>
-                            <p class="footer">From: <span class="by-name text-[#ffc0cb]">อิน</span></p>
                         </div>
                     `;
                     
-                    // Center the final card vertically
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'flex items-center justify-center min-h-[80vh]';
-                    wrapper.innerHTML = finalCardHtml;
-                    terminal.appendChild(wrapper);
+                    // The centering styles applied above will handle the card positioning
+                    terminal.innerHTML = finalCardHtml;
                     
                     onComplete(); 
-                }, 5000);
+
+                }, 5000); // 5 seconds loading time
+
             }
         }
+        
     </script>
 </body>
 </html>
